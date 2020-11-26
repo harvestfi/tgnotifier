@@ -1,0 +1,2 @@
+keytool -trustcacerts -keystore "%JAVA_HOME%\lib\security\cacerts" -storepass changeit -importcert -alias farmdb -file ethparser.crt
+keytool -trustcacerts -keystore "/usr/lib/jvm/java-11-openjdk-11.0.8.10-0.el7_8.x86_64/lib/security/cacerts" -storepass changeit -importcert -alias farmdb -file ethparser.crt
