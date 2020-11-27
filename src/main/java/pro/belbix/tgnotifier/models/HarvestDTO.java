@@ -34,13 +34,13 @@ public class HarvestDTO implements DtoI {
     @Override
     public String print() {
         return EmojiParser.parseToUnicode(
-            (description != null ? description + "\n" : "") +
                 methodName() + " " +
-                String.format("%,.2f$ ", amount) +
+                String.format("%,.2f$ ", usdAmount) +
                 vault + " " +
                 String.format("%,.2f$ ", lastUsdTvl) + "\n" +
                 String.format("%,.2f$ All TVL ", lastAllUsdTvl) +
                 "<a href=\"https://etherscan.io/tx/" + hash + "\">Etherscan</a>" +
+                    (description != null ? description + "\n" : "") +
                 "");
     }
 

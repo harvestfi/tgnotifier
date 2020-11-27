@@ -29,7 +29,6 @@ public class HardWorkDTO implements DtoI {
     @Override
     public String print() {
         return EmojiParser.parseToUnicode(
-            (description != null ? description + "\n" : "") +
                 String.format("\uD83D\uDE9C %,.2f$ for ", shareChangeUsd) +
                 vault + " " +
                 String.format(", all profit %,.2f$ ", shareUsdTotal) +
@@ -39,6 +38,7 @@ public class HardWorkDTO implements DtoI {
                 String.format(" PS APR %,.2f%% ", psApr) +
 //                "\n" +
                 link() +
+                    (description != null ? description + "\n" : "") +
                 "");
     }
 

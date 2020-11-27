@@ -28,6 +28,7 @@ public class HarvestFrameHandler implements StompFrameHandler, FrameHandlerWithQ
             HarvestDTO dto = (HarvestDTO) payload;
             if (PRICE_STUB_TYPE.equals(dto.getMethodName())) {
                 log.info("Received stub price " + dto.getPrices());
+                return;
             }
             log.info("Received harvest " + dto.print());
             queue.put(dto);

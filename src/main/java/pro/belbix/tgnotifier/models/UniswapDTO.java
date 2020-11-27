@@ -32,13 +32,13 @@ public class UniswapDTO implements DtoI {
     @Override
     public String print() {
         return EmojiParser.parseToUnicode(
-            (description != null ? description + "\n" : "") +
                 type() + " " +
                 farmAmount() + " " +
                 separateCoins() + " " +
                 otherCoin() + "\n" +
                 price() + "\uD83D\uDCB2 per FARM " +
                 "<a href=\"https://etherscan.io/tx/" + hash + "\">Etherscan</a>" +
+                    (description != null ? description + "\n" : "") +
                 "");
     }
 

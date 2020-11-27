@@ -7,7 +7,6 @@ public class Commands {
 
     public static final String WELCOME_MESSAGE = "Welcome! By default you are not subscribed to any events. "
         + "Use /help to get commands";
-    public final static String UNKNOWN_COMMAND = "Incorrect or unknown command";
     public final static String PERCENT_VALUE_CALLBACK = "Now set percent value";
     public final static String VALUE_CALLBACK = "Now set correct number value";
 
@@ -45,6 +44,7 @@ public class Commands {
         + PS_APR_CHANGE + " - " + PS_APR_CHANGE_DESC + "\n"
         + HARD_WORK_MIN + " - " + HARD_WORK_MIN_DESC + "\n"
         + "Set value to 0 for unsubscribe.";
+    public final static String UNKNOWN_COMMAND = "Incorrect or unknown command. Use " + HELP;
 
     public static String responseForCommand(String command) {
         if (command == null) {
