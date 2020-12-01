@@ -90,7 +90,12 @@ public class Commands {
         } else if (SUBSCRIBE_ON_ADDRESS.equals(command)) {
             String existAddresses = userEntity.getSubscribedAddress();
             existAddresses = existAddresses == null ? "" : existAddresses + ",";
-            userEntity.setSubscribedAddress(existAddresses + textToHash(text));
+            String hash = textToHash(text);
+            if (existAddresses.contains(hash)) {
+                userEntity.setSubscribedAddress(existAddresses.replace(hash + ",", ""));
+            } else {
+                userEntity.setSubscribedAddress(existAddresses + hash);
+            }
         } else {
             return false;
         }
