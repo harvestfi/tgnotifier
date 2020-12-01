@@ -7,8 +7,9 @@ public class Commands {
 
     public static final String WELCOME_MESSAGE = "Welcome! By default you are not subscribed to any events. "
         + "Use /help to get commands";
-    public final static String PERCENT_VALUE_CALLBACK = "Now set percent value";
-    public final static String VALUE_CALLBACK = "Now set correct number value";
+    public final static String PERCENT_VALUE_CALLBACK = "Now send percent value";
+    public final static String VALUE_CALLBACK = "Now send correct number value";
+    public final static String ADDRESS_CALLBACK = "Now send correct hash for address";
 
     public final static String INFO = "/info";
     public final static String INFO_DESC = "Show your settings";
@@ -34,6 +35,9 @@ public class Commands {
     public final static String HARD_WORK_MIN_DESC = "You will receive notifications about doHardWork calls "
         + "earned more USD than this value";
 
+    public final static String SUBSCRIBE_ON_ADDRESS = "/subscribe_on_addr";
+    public final static String SUBSCRIBE_ON_DESC = "Subscribe to all events related to this address";
+
     public final static String HELP = "/help";
     public final static String HELP_TEXT = "Available commands:\n"
         + INFO + " - " + INFO_DESC + "\n"
@@ -43,6 +47,7 @@ public class Commands {
         + TVL_MIN + " - " + TVL_MIN_DESC + "\n"
         + PS_APR_CHANGE + " - " + PS_APR_CHANGE_DESC + "\n"
         + HARD_WORK_MIN + " - " + HARD_WORK_MIN_DESC + "\n"
+        + SUBSCRIBE_ON_ADDRESS + " - " + SUBSCRIBE_ON_DESC + "\n"
         + "Set value to 0 for unsubscribe.";
     public final static String UNKNOWN_COMMAND = "Incorrect or unknown command. Use " + HELP;
 
@@ -63,26 +68,53 @@ public class Commands {
                 return PS_APR_CHANGE_DESC + "\n" + PERCENT_VALUE_CALLBACK;
             case HARD_WORK_MIN:
                 return HARD_WORK_MIN_DESC + "\n" + VALUE_CALLBACK;
+            case SUBSCRIBE_ON_ADDRESS:
+                return SUBSCRIBE_ON_ADDRESS + "\n" + ADDRESS_CALLBACK;
         }
         return UNKNOWN_COMMAND;
     }
 
-    public static boolean fillFieldForCommand(@NotNull String command, @NotNull UserEntity userEntity, double value) {
+    public static boolean fillFieldForCommand(@NotNull String command, @NotNull UserEntity userEntity, String text) {
         if (FARM_CHANGE.equals(command)) {
-            userEntity.setFarmChange(value);
+            userEntity.setFarmChange(textToDouble(text));
         } else if (FARM_MIN.equals(command)) {
-            userEntity.setMinFarmAmount(value);
+            userEntity.setMinFarmAmount(textToDouble(text));
         } else if (TVL_CHANGE.equals(command)) {
-            userEntity.setTvlChange(value);
+            userEntity.setTvlChange(textToDouble(text));
         } else if (TVL_MIN.equals(command)) {
-            userEntity.setMinTvlAmount(value);
+            userEntity.setMinTvlAmount(textToDouble(text));
         } else if (PS_APR_CHANGE.equals(command)) {
-            userEntity.setHardWorkChange(value);
+            userEntity.setHardWorkChange(textToDouble(text));
         } else if (HARD_WORK_MIN.equals(command)) {
-            userEntity.setMinHardWorkAmount(value);
+            userEntity.setMinHardWorkAmount(textToDouble(text));
+        } else if (SUBSCRIBE_ON_ADDRESS.equals(command)) {
+            String existAddresses = userEntity.getSubscribedAddress();
+            existAddresses = existAddresses == null ? "" : existAddresses + ",";
+            userEntity.setSubscribedAddress(existAddresses + textToHash(text));
         } else {
             return false;
         }
         return true;
+    }
+
+    private static String textToHash(String text) {
+        try {
+            text = text.trim();
+            if (text.startsWith("0x")) {
+                return text;
+            }
+        } catch (Exception e) {
+            throw new IllegalStateException("Incorrect value");
+        }
+        throw new IllegalStateException("Incorrect value, not a hash");
+    }
+
+    private static double textToDouble(String text) {
+        try {
+            return Double.parseDouble(text.replaceAll(",", ".")
+                .replaceAll("[^0-9.]+", "").trim());
+        } catch (Exception e) {
+            throw new IllegalStateException("Incorrect value");
+        }
     }
 }

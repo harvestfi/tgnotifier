@@ -47,25 +47,16 @@ public class DbService {
             return "Please, use command before setup value";
         }
 
-        double value;
         try {
-            value = Double.parseDouble(textToValue(text));
-        } catch (Exception e) {
-            log.error("Error parse value from " + text);
-            return "Incorrect value";
-        }
-
-        if (!fillFieldForCommand(lastCommand, userEntity, value)) {
-            return "Command not found";
+            if (!fillFieldForCommand(lastCommand, userEntity, text)) {
+                return "Command not found";
+            }
+        } catch (IllegalStateException e) {
+            return e.getMessage();
         }
         userEntity.setLastCommand(null);
         userRepository.save(userEntity);
-        return "Value successful updated to " + value;
-    }
-
-    private String textToValue(String text) {
-        return text.replaceAll(",", ".")
-            .replaceAll("[^0-9.]+", "").trim();
+        return "Value successful updated to " + text;
     }
 
     public void updateLastCommand(long id, String command) {
