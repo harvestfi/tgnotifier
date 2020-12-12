@@ -25,17 +25,19 @@ public class DefaultMessageHandler {
         boolean userUpdated = false;
         if (dto instanceof UniswapDTO) {
             UniswapDTO uniswapDTO = (UniswapDTO) dto;
-            if (user.getLastFarm() == null) {
-                user.setLastFarm(uniswapDTO.getLastPrice());
-                dbService.save(user);
-            }
-            if (checkLastValue(user.getLastFarm(), user.getFarmChange(), uniswapDTO.getLastPrice(), dto)) {
-                user.setLastFarm(uniswapDTO.getLastPrice());
-                userUpdated = true;
-            }
+            if("FARM".equals(uniswapDTO.getCoin())) {
+                if (user.getLastFarm() == null) {
+                    user.setLastFarm(uniswapDTO.getLastPrice());
+                    dbService.save(user);
+                }
+                if (checkLastValue(user.getLastFarm(), user.getFarmChange(), uniswapDTO.getLastPrice(), dto)) {
+                    user.setLastFarm(uniswapDTO.getLastPrice());
+                    userUpdated = true;
+                }
 
-            if (checkCurrentValue(user.getMinFarmAmount(), uniswapDTO.getAmount(), dto)) {
-                result = true;
+                if (checkCurrentValue(user.getMinFarmAmount(), uniswapDTO.getAmount(), dto)) {
+                    result = true;
+                }
             }
         } else if (dto instanceof HarvestDTO) {
             HarvestDTO harvestDTO = (HarvestDTO) dto;
