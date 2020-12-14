@@ -48,15 +48,23 @@ public class TelegramBotService {
     }
 
     private int updatesListener(List<Update> updates) {
-        for (Update u : updates) {
-            long chatId = u.message().chat().id();
-            if (!dbService.isKnownChatId(chatId)) {
-                log.info("Chat added " + chatId);
-                sendMessage(chatId, WELCOME_MESSAGE);
-                saveNewUser(u.message());
-                continue;
+        log.info("Get updates " + updates.size());
+        try {
+            for (Update u : updates) {
+                if (u == null || u.message() == null || u.message().chat() == null || u.message().chat().id() == null) {
+                    continue;
+                }
+                long chatId = u.message().chat().id();
+                if (!dbService.isKnownChatId(chatId)) {
+                    log.info("Chat added " + chatId);
+                    sendMessage(chatId, WELCOME_MESSAGE);
+                    saveNewUser(u.message());
+                    continue;
+                }
+                handleMessage(u.message());
             }
-            handleMessage(u.message());
+        } catch (Exception e) {
+            log.error("Update listener err", e);
         }
         return CONFIRMED_UPDATES_ALL;
     }
