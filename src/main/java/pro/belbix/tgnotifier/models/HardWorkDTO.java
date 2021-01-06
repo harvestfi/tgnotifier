@@ -47,7 +47,7 @@ public class HardWorkDTO implements DtoI {
     @Override
     public String printValueChanged(double percent) {
         return EmojiParser.parseToUnicode(
-            percentChangeType(percent) + " "
+            "\uD83D\uDE9C "
                 + vault + " Income changed on " +
                 String.format("%.1f%%", percent) +
                 "\n" +
