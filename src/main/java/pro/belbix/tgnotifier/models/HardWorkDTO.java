@@ -46,9 +46,9 @@ public class HardWorkDTO implements DtoI {
     public String printValueChanged(double percent) {
         return EmojiParser.parseToUnicode(
             "\uD83D\uDE9C "
-                + vault + " Income changed on " +
+                + vault + " Income APR changed on " +
                 String.format("%.1f%% ", percent) +
-                " APR: " + apr +
+                " new APR " + apr + "%" +
                 "\n" +
                 String.format("All vaults profit %,.2f$", allProfit) +
                 String.format(" PS APR %,.2f%% ", psApr) +
