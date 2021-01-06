@@ -1,5 +1,7 @@
 package pro.belbix.tgnotifier.models;
 
+import static pro.belbix.tgnotifier.models.PrintConstants.percentChangeType;
+
 import com.vdurmont.emoji.EmojiParser;
 import javax.persistence.Id;
 import lombok.Data;
@@ -39,6 +41,21 @@ public class HardWorkDTO implements DtoI {
 //                "\n" +
                 link() +
                     (description != null ? description + "\n" : "") +
+                "");
+    }
+
+    @Override
+    public String printValueChanged(double percent) {
+        return EmojiParser.parseToUnicode(
+            percentChangeType(percent) + " "
+                + vault + " Income changed on " +
+                String.format("%.1f%%", percent) +
+                "\n" +
+                String.format("All vaults profit %,.2f$", allProfit) +
+                String.format(" PS APR %,.2f%% ", psApr) +
+//                "\n" +
+                link() +
+                (description != null ? description + "\n" : "") +
                 "");
     }
 

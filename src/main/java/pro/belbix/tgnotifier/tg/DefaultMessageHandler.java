@@ -20,84 +20,70 @@ public class DefaultMessageHandler {
         this.properties = properties;
     }
 
-    public boolean checkAndUpdate(UserEntity user, DtoI dto) {
-        boolean result = false;
-        boolean userUpdated = false;
+    public CheckResult checkAndUpdate(UserEntity user, DtoI dto) {
+        CheckResult result = new CheckResult();
         if (dto instanceof UniswapDTO) {
-            UniswapDTO uniswapDTO = (UniswapDTO) dto;
-            if("FARM".equals(uniswapDTO.getCoin())) {
-                if (user.getLastFarm() == null) {
-                    user.setLastFarm(uniswapDTO.getLastPrice());
-                    dbService.save(user);
-                }
-                if (checkLastValue(user.getLastFarm(), user.getFarmChange(), uniswapDTO.getLastPrice(), dto)) {
-                    user.setLastFarm(uniswapDTO.getLastPrice());
-                    userUpdated = true;
-                }
-
-                if (checkCurrentValue(user.getMinFarmAmount(), uniswapDTO.getAmount(), dto)) {
-                    result = true;
-                }
-            }
+            checkUniswapDto(user, (UniswapDTO) dto, result);
         } else if (dto instanceof HarvestDTO) {
-            HarvestDTO harvestDTO = (HarvestDTO) dto;
-            if (user.getLastTvl() == null) {
-                user.setLastTvl(harvestDTO.getLastAllUsdTvl());
-                dbService.save(user);
-            }
-            if (checkLastValue(user.getLastTvl(), user.getTvlChange(), harvestDTO.getLastAllUsdTvl(), dto)) {
-                user.setLastTvl(harvestDTO.getLastAllUsdTvl());
-                userUpdated = true;
-            }
-
-            if (checkCurrentValue(user.getMinTvlAmount(), harvestDTO.getUsdAmount(), dto)) {
-                result = true;
-            }
+            checkHarvestDto(user, (HarvestDTO) dto, result);
         } else if (dto instanceof HardWorkDTO) {
-            HardWorkDTO hardWorkDTO = (HardWorkDTO) dto;
-            if (user.getLastHardWork() == null) {
-                user.setLastHardWork(hardWorkDTO.getPsApr());
-                dbService.save(user);
-            }
-            if (checkLastValue(user.getLastHardWork(), user.getHardWorkChange(), hardWorkDTO.getPsApr(), dto)) {
-                user.setLastHardWork(hardWorkDTO.getPsApr());
-                userUpdated = true;
-            }
-
-            if (checkCurrentValue(user.getMinHardWorkAmount(), hardWorkDTO.getShareChangeUsd(), dto)) {
-                result = true;
-            }
+            checkHardWorkDto(user, (HardWorkDTO) dto, result);
         }
-
-        if (userUpdated) {
-            dbService.save(user);
-            result = true;
-        }
-
         return result;
     }
 
+    private void checkUniswapDto(UserEntity user, UniswapDTO dto, CheckResult checkResult) {
+        if ("FARM".equals(dto.getCoin())) {
+            if (user.getLastFarm() == null) {
+                user.setLastFarm(dto.getLastPrice());
+                dbService.save(user);
+            }
+            //sorted by priority
+            checkCurrentValue(user.getMinFarmAmount(), dto.getAmount(), dto, checkResult);
+            checkPricePercentChange(user.getLastFarm(), user.getFarmChange(), dto.getLastPrice(), dto, checkResult);
+        }
+    }
 
+    private void checkHarvestDto(UserEntity user, HarvestDTO dto, CheckResult checkResult) {
+        if (user.getLastTvl() == null) {
+            user.setLastTvl(dto.getLastAllUsdTvl());
+            dbService.save(user);
+        }
+        //sorted by priority
+        checkCurrentValue(user.getMinTvlAmount(), dto.getUsdAmount(), dto, checkResult);
+        checkPricePercentChange(user.getLastTvl(), user.getTvlChange(), dto.getLastAllUsdTvl(), dto, checkResult);
+    }
 
-    private boolean checkLastValue(Double userLastValue, Double userChange, Double dtoLastValue, DtoI dto) {
+    private void checkHardWorkDto(UserEntity user, HardWorkDTO dto, CheckResult checkResult) {
+        if (user.getLastHardWork() == null) {
+            user.setLastHardWork(dto.getPsApr());
+            dbService.save(user);
+        }
+        //sorted by priority
+        checkCurrentValue(user.getMinHardWorkAmount(), dto.getShareChangeUsd(), dto, checkResult);
+        checkPricePercentChange(user.getLastHardWork(), user.getHardWorkChange(), dto.getPsApr(), dto, checkResult);
+    }
+
+    private void checkPricePercentChange(Double userLastValue, Double userChange, Double dtoLastValue, DtoI dto,
+                                         CheckResult checkResult) {
         if (userLastValue == null) {
-            return false;
+            return;
         }
         if (userChange != null &&
             userChange != 0.0 &&
             dtoLastValue != null) {
-            double changePerc = ((dtoLastValue - userLastValue) / dtoLastValue) * 100;
-            if (Math.abs(changePerc) > userChange) {
+            double changePercent = ((dtoLastValue - userLastValue) / dtoLastValue) * 100;
+            if (Math.abs(changePercent) > userChange) {
                 if (properties.isShowDescriptions()) {
-                    dto.setDescription("Trigger " + String.format("%.2f%% > %.2f%%", changePerc, userChange));
+                    dto.setDescription("Trigger " + String.format("%.2f%% > %.2f%%", changePercent, userChange));
                 }
-                return true;
+                checkResult.setSuccess(true);
+                checkResult.setMessage(dto.printValueChanged(changePercent));
             }
         }
-        return false;
     }
 
-    private boolean checkCurrentValue(Double userMinAmount, Double dtoAmount, DtoI dto) {
+    private void checkCurrentValue(Double userMinAmount, Double dtoAmount, DtoI dto, CheckResult checkResult) {
         if (userMinAmount != null
             && userMinAmount != 0.0
             && dtoAmount != null
@@ -105,9 +91,9 @@ public class DefaultMessageHandler {
             if (properties.isShowDescriptions()) {
                 dto.setDescription("Trigger " + String.format("%.2f > %.2f", dtoAmount, userMinAmount));
             }
-            return true;
+            checkResult.setSuccess(true);
+            checkResult.setMessage(dto.print());
         }
-        return false;
     }
 
 }

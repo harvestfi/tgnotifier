@@ -133,8 +133,9 @@ public class TelegramBotService {
 
         for (UserEntity user : dbService.findAllChats()) {
             try {
-                if (defaultMessageHandler.checkAndUpdate(user, dto)) {
-                    sendMessage(user.getId(), dto.print());
+                CheckResult checkResult = defaultMessageHandler.checkAndUpdate(user, dto);
+                if (checkResult.isSuccess()) {
+                    sendMessage(user.getId(), checkResult.getMessage());
                 }
                 String ownerMsg = addressesMessageHandler.check(user, dto);
                 if (ownerMsg != null) {

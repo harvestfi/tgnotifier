@@ -1,5 +1,7 @@
 package pro.belbix.tgnotifier.models;
 
+import static pro.belbix.tgnotifier.models.PrintConstants.percentChangeType;
+
 import com.vdurmont.emoji.EmojiParser;
 import java.math.BigInteger;
 import javax.persistence.Id;
@@ -41,6 +43,19 @@ public class HarvestDTO implements DtoI {
                 String.format("%,.2f$ All TVL ", lastAllUsdTvl) +
                 "<a href=\"https://etherscan.io/tx/" + hash + "\">Etherscan</a>" +
                     (description != null ? description + "\n" : "") +
+                "");
+    }
+
+    @Override
+    public String printValueChanged(double percent) {
+        return EmojiParser.parseToUnicode(
+            percentChangeType(percent) + " "
+                + vault + " TVL changed on " +
+                String.format("%.1f%%", percent) +
+                "\n" +
+                String.format("%,.2f$ All TVL ", lastAllUsdTvl) +
+                "<a href=\"https://etherscan.io/tx/" + hash + "\">Etherscan</a>" +
+                (description != null ? description + "\n" : "") +
                 "");
     }
 
