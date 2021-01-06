@@ -1,7 +1,5 @@
 package pro.belbix.tgnotifier.models;
 
-import static pro.belbix.tgnotifier.models.PrintConstants.percentChangeType;
-
 import com.vdurmont.emoji.EmojiParser;
 import javax.persistence.Id;
 import lombok.Data;
@@ -31,7 +29,7 @@ public class HardWorkDTO implements DtoI {
     @Override
     public String print() {
         return EmojiParser.parseToUnicode(
-                String.format("\uD83D\uDE9C %,.2f$ for ", shareChangeUsd) +
+            String.format("\uD83D\uDE9C %,.2f$ for ", shareChangeUsd) +
                 vault + " " +
                 String.format(", all profit %,.2f$ ", shareUsdTotal) +
                 String.format(" and %,.2f%% APR ", apr) +
@@ -40,7 +38,7 @@ public class HardWorkDTO implements DtoI {
                 String.format(" PS APR %,.2f%% ", psApr) +
 //                "\n" +
                 link() +
-                    (description != null ? description + "\n" : "") +
+                (description != null ? description + "\n" : "") +
                 "");
     }
 
@@ -49,7 +47,8 @@ public class HardWorkDTO implements DtoI {
         return EmojiParser.parseToUnicode(
             "\uD83D\uDE9C "
                 + vault + " Income changed on " +
-                String.format("%.1f%%", percent) +
+                String.format("%.1f%% ", percent) +
+                " APR: " + apr +
                 "\n" +
                 String.format("All vaults profit %,.2f$", allProfit) +
                 String.format(" PS APR %,.2f%% ", psApr) +
