@@ -40,7 +40,11 @@ public class DefaultMessageHandler {
             }
             //sorted by priority
             checkCurrentValue(user.getMinFarmAmount(), dto.getAmount(), dto, checkResult);
-            checkPricePercentChange(user.getLastFarm(), user.getFarmChange(), dto.getLastPrice(), dto, checkResult);
+            if (checkPricePercentChange(
+                user.getLastFarm(), user.getFarmChange(), dto.getLastPrice(), dto, checkResult)) {
+                user.setLastFarm(dto.getLastPrice());
+                dbService.save(user);
+            }
         }
     }
 
@@ -51,7 +55,11 @@ public class DefaultMessageHandler {
         }
         //sorted by priority
         checkCurrentValue(user.getMinTvlAmount(), dto.getUsdAmount(), dto, checkResult);
-        checkPricePercentChange(user.getLastTvl(), user.getTvlChange(), dto.getLastAllUsdTvl(), dto, checkResult);
+        if (checkPricePercentChange(user.getLastTvl(), user.getTvlChange(), dto.getLastAllUsdTvl(), dto, checkResult)) {
+            user.setLastTvl(dto.getLastAllUsdTvl());
+            dbService.save(user);
+        }
+
     }
 
     private void checkHardWorkDto(UserEntity user, HardWorkDTO dto, CheckResult checkResult) {
@@ -61,13 +69,17 @@ public class DefaultMessageHandler {
         }
         //sorted by priority
         checkCurrentValue(user.getMinHardWorkAmount(), dto.getShareChangeUsd(), dto, checkResult);
-        checkPricePercentChange(user.getLastHardWork(), user.getHardWorkChange(), dto.getPsApr(), dto, checkResult);
+        if (checkPricePercentChange(user.getLastHardWork(), user.getHardWorkChange(), dto.getPsApr(), dto,
+            checkResult)) {
+            user.setLastHardWork(dto.getPsApr());
+            dbService.save(user);
+        }
     }
 
-    private void checkPricePercentChange(Double userLastValue, Double userChange, Double dtoLastValue, DtoI dto,
-                                         CheckResult checkResult) {
+    private boolean checkPricePercentChange(Double userLastValue, Double userChange, Double dtoLastValue, DtoI dto,
+                                            CheckResult checkResult) {
         if (userLastValue == null) {
-            return;
+            return false;
         }
         if (userChange != null &&
             userChange != 0.0 &&
@@ -79,8 +91,10 @@ public class DefaultMessageHandler {
                 }
                 checkResult.setSuccess(true);
                 checkResult.setMessage(dto.printValueChanged(changePercent));
+                return true;
             }
         }
+        return false;
     }
 
     private void checkCurrentValue(Double userMinAmount, Double dtoAmount, DtoI dto, CheckResult checkResult) {
