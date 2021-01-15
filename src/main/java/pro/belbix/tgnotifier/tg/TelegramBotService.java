@@ -1,7 +1,6 @@
 package pro.belbix.tgnotifier.tg;
 
 import static com.pengrad.telegrambot.UpdatesListener.CONFIRMED_UPDATES_ALL;
-import static com.pengrad.telegrambot.model.request.ParseMode.HTML;
 import static pro.belbix.tgnotifier.tg.Commands.HELP;
 import static pro.belbix.tgnotifier.tg.Commands.HELP_TEXT;
 import static pro.belbix.tgnotifier.tg.Commands.INFO;
@@ -9,12 +8,9 @@ import static pro.belbix.tgnotifier.tg.Commands.UNKNOWN_COMMAND;
 import static pro.belbix.tgnotifier.tg.Commands.WELCOME_MESSAGE;
 import static pro.belbix.tgnotifier.tg.Commands.responseForCommand;
 
-import com.pengrad.telegrambot.Callback;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
-import com.pengrad.telegrambot.request.SendMessage;
-import com.pengrad.telegrambot.response.SendResponse;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -27,12 +23,11 @@ import pro.belbix.tgnotifier.models.DtoI;
 @Service
 public class TelegramBotService {
 
-    private final Callback<SendMessage, SendResponse> callback = new TelegramCallback();
     private final DbService dbService;
     private final Properties properties;
     private final DefaultMessageHandler defaultMessageHandler;
-    private TelegramBot bot;
-    private AddressesMessageHandler addressesMessageHandler = new AddressesMessageHandler();
+    private MessageSender messageSender;
+    private final AddressesMessageHandler addressesMessageHandler = new AddressesMessageHandler();
 
     public TelegramBotService(DbService dbService, Properties properties,
                               DefaultMessageHandler defaultMessageHandler) {
@@ -42,8 +37,9 @@ public class TelegramBotService {
     }
 
     public void init() {
-        bot = new TelegramBot(properties.getTelegramToken());
+        TelegramBot bot = new TelegramBot(properties.getTelegramToken());
         bot.setUpdatesListener(this::updatesListener);
+        messageSender = new MessageSender(bot);
         log.info("Telegram Bot started");
     }
 
@@ -70,7 +66,7 @@ public class TelegramBotService {
     }
 
     public void sendMessage(long chatId, String message) {
-        bot.execute(new SendMessage(chatId, message).parseMode(HTML).disableWebPagePreview(true), callback);
+        messageSender.send(chatId, message);
     }
 
     private void saveNewUser(Message m) {
