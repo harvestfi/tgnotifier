@@ -93,7 +93,7 @@ public class ImportantEventsHandlerTest {
      
         telegramBotService.init();
 
-        ImportantEventsDTO dto = new ImportantEventsDTO(info);
+        ImportantEventsDTO dto = new ImportantEventsDTO();
         dto.setEvent(event);
         dto.setBlock(block);
         dto.setBlockDate(blockDate);
@@ -102,6 +102,7 @@ public class ImportantEventsHandlerTest {
         dto.setVault(vault);
         dto.setHash(hash);
         dto.setMintAmount(mintAmount);
+        dto.setInfo(info);
 
 
         telegramBotService.sendDto(dto);

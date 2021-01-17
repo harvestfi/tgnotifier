@@ -1,7 +1,5 @@
 package pro.belbix.tgnotifier.tg;
 
-import java.util.List;
-
 import org.springframework.stereotype.Service;
 import pro.belbix.tgnotifier.Properties;
 import pro.belbix.tgnotifier.db.DbService;

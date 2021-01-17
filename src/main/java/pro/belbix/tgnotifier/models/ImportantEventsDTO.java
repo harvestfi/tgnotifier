@@ -26,17 +26,12 @@ public class ImportantEventsDTO implements DtoI {
 
     private String description;
 
-    private final ImportantEventsInfo additionalInfo;
+    private ImportantEventsInfo additionalInfo;
 
-
-    public ImportantEventsDTO() {
+    public void updateInfo() {
         this.additionalInfo = parseInfo();
     }
 
-    public ImportantEventsDTO(String text) {
-        this.info = text;
-        this.additionalInfo = parseInfo();
-    }
     @Override
     public String print() {
         return blockDate + " "
@@ -50,7 +45,7 @@ public class ImportantEventsDTO implements DtoI {
 
     public String printStrategyChanged() {
         return EmojiParser.parseToUnicode(
-            "\u2757 on block <code>" + block + "</code> <b>strategy changed</b> for " + linkVault() + "\n" +
+            "\u2757 on block <code>" + block + "</code> strategy <b>" + linkTx(hash, "changed") + "</b> for " + linkVault() + "\n" +
             linkStrategies() + " " +
             linkDiff() + "\n" +
             (description != null ? description + "\n" : "") +
@@ -59,7 +54,7 @@ public class ImportantEventsDTO implements DtoI {
 
     public String printStrategyAnnounced() {
         return EmojiParser.parseToUnicode(
-            "\u26A0\uFE0F on block <code>" + block + "</code> <b>strategy announced</b> for " + linkVault() + "\n" +
+            "\u26A0\uFE0F on block <code>" + block + "</code> strategy <b>" + linkTx(hash, "announced") + "</b> for " + linkVault() + "\n" +
             linkStrategies() + " " +
             linkDiff() + "\n" +
             printEarliestEffective() + "\n" +
@@ -69,8 +64,8 @@ public class ImportantEventsDTO implements DtoI {
     
     public String printTokenMinted() {
         return EmojiParser.parseToUnicode(
-            " \uD83D\uDE9C on block <code>" + block + "</code> <b>minted</b> <code>" + mintAmount + "</code> " + linkVault() + "\n" +
-            linkTx(hash) + "\n" +
+            "\u26A1 on block <code>" + block + "</code> <b>minted</b> <code>" + String.format("%.2f", mintAmount) + "</code> " + linkVault() + " \uD83D\uDE9C\n" +
+            linkTx(hash, "\uD83D\uDD0D transaction") + "\n" +
             (description != null ? description + "\n" : "") +
             "");
     }
@@ -87,8 +82,8 @@ public class ImportantEventsDTO implements DtoI {
                " <a href=\"https://etherscan.io/address/" + newStrategy + "\">\uD83D\uDD0E New Strategy</a>";
     }
 
-    private String linkTx(String tx) {        
-        return "<a href=\"https://etherscan.io/tx/" + tx + "\">\uD83D\uDD0D transaction</a>";
+    private String linkTx(String tx, String text) {        
+        return "<a href=\"https://etherscan.io/tx/" + tx + "\">" + text + "</a>";
     }
 
     private String linkVault() {        

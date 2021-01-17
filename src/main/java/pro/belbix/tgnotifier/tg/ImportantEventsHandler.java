@@ -2,7 +2,6 @@ package pro.belbix.tgnotifier.tg;
 
 import org.springframework.stereotype.Service;
 import pro.belbix.tgnotifier.Properties;
-import pro.belbix.tgnotifier.db.DbService;
 import pro.belbix.tgnotifier.db.entity.UserEntity;
 import pro.belbix.tgnotifier.models.DtoI;
 import pro.belbix.tgnotifier.models.ImportantEventsDTO;
@@ -10,11 +9,9 @@ import pro.belbix.tgnotifier.models.ImportantEventsDTO;
 
 @Service
 public class ImportantEventsHandler {
-    private final DbService dbService;
     private final Properties properties;
 
-    public ImportantEventsHandler(DbService dbService, Properties properties) {
-        this.dbService = dbService;
+    public ImportantEventsHandler(Properties properties) {
         this.properties = properties;
     }
 
@@ -22,6 +19,7 @@ public class ImportantEventsHandler {
         if (dto instanceof ImportantEventsDTO) {
             CheckResult result = new CheckResult();
             ImportantEventsDTO eventDto = (ImportantEventsDTO) dto; 
+            eventDto.updateInfo();
         
             if ("StrategyChanged".equals(eventDto.getEvent())) {
                  checkStrategyChangedDto(user, eventDto, result);
