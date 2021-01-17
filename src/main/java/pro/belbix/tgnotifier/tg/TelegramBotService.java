@@ -28,12 +28,15 @@ public class TelegramBotService {
     private final DefaultMessageHandler defaultMessageHandler;
     private MessageSender messageSender;
     private final AddressesMessageHandler addressesMessageHandler = new AddressesMessageHandler();
+    private final ImportantEventsHandler importantEventsHandler;
 
     public TelegramBotService(DbService dbService, Properties properties,
-                              DefaultMessageHandler defaultMessageHandler) {
+                              DefaultMessageHandler defaultMessageHandler,
+                              ImportantEventsHandler importantEventsHandler){
         this.properties = properties;
         this.dbService = dbService;
         this.defaultMessageHandler = defaultMessageHandler;
+        this.importantEventsHandler = importantEventsHandler;
     }
 
     public void init() {
@@ -136,6 +139,10 @@ public class TelegramBotService {
                 String ownerMsg = addressesMessageHandler.check(user, dto);
                 if (ownerMsg != null) {
                     sendMessage(user.getId(), ownerMsg);
+                }
+                CheckResult eventResult = importantEventsHandler.checkAndUpdate(user, dto);
+                if (eventResult.isSuccess()) {
+                    sendMessage(user.getId(), eventResult.getMessage());
                 }
             } catch (Exception e) {
                 log.error("Error while handle " + dto.print());

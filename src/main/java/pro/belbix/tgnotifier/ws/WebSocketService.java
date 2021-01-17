@@ -19,15 +19,18 @@ public class WebSocketService {
     private final UniFrameHandler uniFrameHandler;
     private final HarvestFrameHandler harvestFrameHandler;
     private final HardWorkFrameHandler hardWorkFrameHandler;
+    private final ImportantEventsFrameHandler importantEventsFrameHandler;
     private WebSocketStompClient stompClient;
 
     public WebSocketService(Properties properties, UniFrameHandler uniFrameHandler,
                             HarvestFrameHandler harvestFrameHandler,
-                            HardWorkFrameHandler hardWorkFrameHandler) {
+                            HardWorkFrameHandler hardWorkFrameHandler,
+                            ImportantEventsFrameHandler importantEventsFrameHandler) {
         this.properties = properties;
         this.uniFrameHandler = uniFrameHandler;
         this.harvestFrameHandler = harvestFrameHandler;
         this.hardWorkFrameHandler = hardWorkFrameHandler;
+        this.importantEventsFrameHandler = importantEventsFrameHandler;
     }
 
     public void start() {
@@ -37,7 +40,8 @@ public class WebSocketService {
 
         SessionHandler sessionHandler = new SessionHandler(this, uniFrameHandler,
             harvestFrameHandler,
-            hardWorkFrameHandler);
+            hardWorkFrameHandler,
+            importantEventsFrameHandler);
 
         stompClient = new WebSocketStompClient(sockJsClient);
         stompClient.setMessageConverter(new MappingJackson2MessageConverter());

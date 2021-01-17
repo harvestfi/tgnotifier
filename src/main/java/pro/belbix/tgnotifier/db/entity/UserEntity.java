@@ -7,6 +7,9 @@ import static pro.belbix.tgnotifier.tg.Commands.PS_APR_CHANGE;
 import static pro.belbix.tgnotifier.tg.Commands.SUBSCRIBE_ON_ADDRESS;
 import static pro.belbix.tgnotifier.tg.Commands.TVL_CHANGE;
 import static pro.belbix.tgnotifier.tg.Commands.TVL_MIN;
+import static pro.belbix.tgnotifier.tg.Commands.STRATEGY_CHANGE;
+import static pro.belbix.tgnotifier.tg.Commands.STRATEGY_ANNOUNCE;
+import static pro.belbix.tgnotifier.tg.Commands.TOKEN_MINT;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -38,6 +41,13 @@ public class UserEntity {
     private Double minHardWorkAmount;
     private String subscribedAddress;
 
+    private Boolean strategyChange;
+    private Long lastStrategyChange;
+    private Boolean strategyAnnounce;
+    private Long lastStrategyAnnounce;
+    private Double tokenMint;
+    private Long lastTokenMint;
+
     public String print() {
         return "User settings:\n" +
             FARM_CHANGE + " FARM change: " + farmChange + "\n" +
@@ -47,6 +57,9 @@ public class UserEntity {
             PS_APR_CHANGE + " PS APR change: " + hardWorkChange + "\n" +
             HARD_WORK_MIN + " Hard Work min: " + minHardWorkAmount + "\n" +
             SUBSCRIBE_ON_ADDRESS + " Subscribed on: " + subscribedAddress + "\n" +
+            STRATEGY_CHANGE + " Subscribed: " + strategyChange + "\n" +
+            STRATEGY_ANNOUNCE + " Subscribed: " + strategyAnnounce + "\n" +
+            TOKEN_MINT + " Minted min: " + tokenMint + "\n"+
             "";
     }
 }

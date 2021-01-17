@@ -12,19 +12,23 @@ public class SessionHandler extends StompSessionHandlerAdapter {
     public final static String UNI_TRANSACTIONS_TOPIC_NAME = "/topic/transactions";
     public final static String HARVEST_TRANSACTIONS_TOPIC_NAME = "/topic/harvest";
     public final static String HARD_WORK_TOPIC_NAME = "/topic/hardwork";
+    public final static String IMPORTANT_EVENTS_TOPIC_NAME = "/topic/events";
 
     private final WebSocketService webSocketService;
     private final UniFrameHandler uniFrameHandler;
     private final HarvestFrameHandler harvestFrameHandler;
     private final HardWorkFrameHandler hardWorkFrameHandler;
+    private final ImportantEventsFrameHandler importantEventsFrameHandler;
 
     public SessionHandler(WebSocketService webSocketService, UniFrameHandler uniFrameHandler,
                           HarvestFrameHandler harvestFrameHandler,
-                          HardWorkFrameHandler hardWorkFrameHandler) {
+                          HardWorkFrameHandler hardWorkFrameHandler,
+                          ImportantEventsFrameHandler importantEventsFrameHandler) {
         this.webSocketService = webSocketService;
         this.uniFrameHandler = uniFrameHandler;
         this.harvestFrameHandler = harvestFrameHandler;
         this.hardWorkFrameHandler = hardWorkFrameHandler;
+        this.importantEventsFrameHandler = importantEventsFrameHandler;
     }
 
     @Override
@@ -33,6 +37,7 @@ public class SessionHandler extends StompSessionHandlerAdapter {
         session.subscribe(UNI_TRANSACTIONS_TOPIC_NAME, uniFrameHandler);
         session.subscribe(HARVEST_TRANSACTIONS_TOPIC_NAME, harvestFrameHandler);
         session.subscribe(HARD_WORK_TOPIC_NAME, hardWorkFrameHandler);
+        session.subscribe(IMPORTANT_EVENTS_TOPIC_NAME, importantEventsFrameHandler);
     }
 
     @Override
