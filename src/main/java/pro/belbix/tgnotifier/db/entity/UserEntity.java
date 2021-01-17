@@ -42,11 +42,8 @@ public class UserEntity {
     private String subscribedAddress;
 
     private Boolean strategyChange;
-    private Long lastStrategyChange;
     private Boolean strategyAnnounce;
-    private Long lastStrategyAnnounce;
     private Double tokenMint;
-    private Long lastTokenMint;
 
     public String print() {
         return "User settings:\n" +
