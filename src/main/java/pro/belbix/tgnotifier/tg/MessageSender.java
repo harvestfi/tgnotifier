@@ -41,7 +41,7 @@ public class MessageSender {
             Instant lastMessage = lastUserMessages.get(chatId);
             if (lastMessage != null) {
                 if (Duration.between(lastMessage, Instant.now()).toMillis() < WAIT_MILLIS) {
-                    int waited = Optional.of(waitedMessages.get(chatId)).orElse(0) + 1;
+                    int waited = Optional.ofNullable(waitedMessages.get(chatId)).orElse(0) + 1;
                     waitedMessages.put(chatId, waited);
                     try {
                         Thread.sleep(WAIT_MILLIS * waited);

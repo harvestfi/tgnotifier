@@ -19,9 +19,14 @@ public class ImportantEventsHandlerTest {
     @Autowired
     private TelegramBotService telegramBotService;
 
+    public void init() {
+        telegramBotService.init();
+    }
+
 
     @Test
     public void testStrategyChange() {
+        init();
         sendImportantEvent(
             "StrategyChanged",
             Long.valueOf("11521205"), 
@@ -37,6 +42,7 @@ public class ImportantEventsHandlerTest {
 
     @Test
     public void testStrategyAnnounce() {
+        init();
         sendImportantEvent(
             "StrategyAnnounced",
             Long.valueOf("11517789"), 
@@ -52,6 +58,7 @@ public class ImportantEventsHandlerTest {
 
     @Test
     public void testTokenMint() {
+        init();
         sendImportantEvent(
             "TokenMinted",
             Long.valueOf("11550180"), 
@@ -91,8 +98,7 @@ public class ImportantEventsHandlerTest {
     private void sendImportantEvent(String event, Long block, Long blockDate, String newStrategy, 
                                     String oldStrategy, String vault, String hash, Double mintAmount, String info) {
      
-        telegramBotService.init();
-
+        
         ImportantEventsDTO dto = new ImportantEventsDTO();
         dto.setEvent(event);
         dto.setBlock(block);
@@ -104,9 +110,13 @@ public class ImportantEventsHandlerTest {
         dto.setMintAmount(mintAmount);
         dto.setInfo(info);
 
-
         telegramBotService.sendDto(dto);
 
+        // wait for all messages to be sent
+        try {
+        Thread.sleep(5000);
+        } catch (InterruptedException ignored) {
+        }
     }
 
 }
