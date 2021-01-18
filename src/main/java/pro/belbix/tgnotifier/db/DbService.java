@@ -56,7 +56,7 @@ public class DbService {
         }
         userEntity.setLastCommand(null);
         userRepository.save(userEntity);
-        return "Value successful updated to " + text;
+        return "Value successfully updated to " + text;
     }
 
     public void updateLastCommand(long id, String command) {
