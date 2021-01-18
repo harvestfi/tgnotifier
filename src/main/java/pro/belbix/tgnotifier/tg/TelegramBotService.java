@@ -141,7 +141,7 @@ public class TelegramBotService {
                     sendMessage(user.getId(), ownerMsg);
                 }
                 CheckResult eventResult = importantEventsHandler.checkAndUpdate(user, dto);
-                if (eventResult.isSuccess()) {
+                if (eventResult != null && eventResult.isSuccess()) {
                     sendMessage(user.getId(), eventResult.getMessage());
                 }
             } catch (Exception e) {

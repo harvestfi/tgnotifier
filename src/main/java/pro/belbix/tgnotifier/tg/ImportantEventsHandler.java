@@ -37,7 +37,7 @@ public class ImportantEventsHandler {
     }
 
     private void checkStrategyChangedDto(UserEntity user, ImportantEventsDTO dto, CheckResult checkResult) {
-        if (user.getStrategyChange()) {
+        if (user.getStrategyChange() != null && user.getStrategyChange()) {
             if (properties.isShowDescriptions()) {
                 dto.setDescription("Trigger " + user.getStrategyChange());
             }
@@ -47,7 +47,7 @@ public class ImportantEventsHandler {
     }
 
     private void checkStrategyAnnouncedDto(UserEntity user, ImportantEventsDTO dto, CheckResult checkResult) {
-        if (user.getStrategyAnnounce()) {
+        if (user.getStrategyAnnounce() != null && user.getStrategyAnnounce()) {
             if (properties.isShowDescriptions()) {
                 dto.setDescription("Trigger " + user.getStrategyAnnounce());
             }
