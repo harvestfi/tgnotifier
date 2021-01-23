@@ -18,10 +18,9 @@ spring:
 
 
 tgnotifier:
-  telegramToken: 1485711934:AAH7Iqf7OsZqff4nxJ7KnBAJsH-A9t6ZQOY
-  wsUrl: ws://localhost:4140/stomp
-#  wsUrl: wss://api.farmdashboard.xyz:4140/stomp
-  showDescriptions: true
+  telegramToken:
+  wsUrl:
+  showDescriptions: false
 
 logging:
   level:
