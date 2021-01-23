@@ -1,1 +1,1 @@
-web: java -jar dist/tgnotifier.jar
+worker: java -jar dist/tgnotifier.jar
