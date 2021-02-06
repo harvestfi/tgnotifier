@@ -37,7 +37,11 @@ public class HardWorkHandlerTest {
             3060D,
             8631D,
             68.7981194559267,
-            "0xfaff1b27f5f17252bea0a2a1cc452f282fc644ec8ccfa963941f2c83ce6414aa_207"
+            "0xfaff1b27f5f17252bea0a2a1cc452f282fc644ec8ccfa963941f2c83ce6414aa_207",
+            252625,
+            420,
+            23.23,
+            1234567.89
         );
     }
 
@@ -54,14 +58,19 @@ public class HardWorkHandlerTest {
             10439D,
             253689D,
             56.56908412457272,
-            "0x7769abc1da7be3ee551f08fdb1c78016024964b0299c805d37ca0baced19b707_197"
+            "0x7769abc1da7be3ee551f08fdb1c78016024964b0299c805d37ca0baced19b707_197",
+            2211878,
+            69,
+            38.47129996558849156,
+            1234567.89
         );
     }
 
     private void sendHardWork(Double allProfit, Long block, Long blockDate, Double apr, 
                                     Double perc, String vault, 
                                     Double shareChangeUsd, Double shareUsdTotal, Double psApr,
-                                    String id) {
+                                    String id, long periodOfWork, int callsQuantity, double farmBuyback,
+                                    double weeklyAverageTvl) {
      
         
         HardWorkDTO dto = new HardWorkDTO();
@@ -75,6 +84,10 @@ public class HardWorkHandlerTest {
         dto.setShareUsdTotal(shareUsdTotal);
         dto.setPsApr(psApr);
         dto.setId(id);
+        dto.setPeriodOfWork(periodOfWork);
+        dto.setCallsQuantity(callsQuantity);
+        dto.setFarmBuyback(farmBuyback);
+        dto.setWeeklyAverageTvl(weeklyAverageTvl);
 
         telegramBotService.sendDto(dto);
 

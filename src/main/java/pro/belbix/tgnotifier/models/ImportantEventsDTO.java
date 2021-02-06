@@ -47,7 +47,7 @@ public class ImportantEventsDTO implements DtoI {
 
     public String printStrategyChanged() {
         return EmojiParser.parseToUnicode(
-            "\u2757 <code>" + LocalDateTime.ofInstant(Instant.ofEpochSecond(blockDate), ZoneOffset.UTC) + " UTC</code> strategy <b>" + linkTx(hash, "changed") + "</b> for " + linkVault() + "\n" +
+            "\u2757 " + printUTC(blockDate) + " strategy <b>" + linkTx(hash, "changed") + "</b> for " + linkVault() + "\n" +
             linkStrategies() + " " +
             linkDiff() + "\n" +
             (description != null ? description + "\n" : "") +
@@ -56,7 +56,7 @@ public class ImportantEventsDTO implements DtoI {
 
     public String printStrategyAnnounced() {
         return EmojiParser.parseToUnicode(
-            "\u26A0\uFE0F <code>" + LocalDateTime.ofInstant(Instant.ofEpochSecond(blockDate), ZoneOffset.UTC) + " UTC</code> strategy <b>" + linkTx(hash, "announced") + "</b> for " + linkVault() + "\n" +
+            "\u26A0\uFE0F " + printUTC(blockDate) + " strategy <b>" + linkTx(hash, "announced") + "</b> for " + linkVault() + "\n" +
             linkStrategies() + " " +
             linkDiff() + "\n" +
             printEarliestEffective() + "\n" +
@@ -66,7 +66,7 @@ public class ImportantEventsDTO implements DtoI {
     
     public String printTokenMinted() {
         return EmojiParser.parseToUnicode(
-            "\u26A1 <code>" + LocalDateTime.ofInstant(Instant.ofEpochSecond(blockDate), ZoneOffset.UTC) + " UTC</code> <b>minted</b> <code>" + String.format("%.2f", mintAmount) + "</code> " + linkVault() + " \uD83D\uDE9C\n" +
+            "\u26A1 " + printUTC(blockDate) + " <b>minted</b> <code>" + String.format("%.2f", mintAmount) + "</code> " + linkVault() + " \uD83D\uDE9C\n" +
             linkTx(hash, "\uD83D\uDD0D transaction") + "\n" +
             (description != null ? description + "\n" : "") +
             "");
@@ -74,7 +74,7 @@ public class ImportantEventsDTO implements DtoI {
 
     private String printEarliestEffective() {
         return (additionalInfo != null 
-        ? "\u23F1\uFE0F earliest effective <code>" + LocalDateTime.ofInstant(Instant.ofEpochSecond(blockDate + additionalInfo.getStrategyTimeLock()), ZoneOffset.UTC) + " UTC</code>"
+        ? "\u23F1\uFE0F earliest effective " + printUTC(blockDate + additionalInfo.getStrategyTimeLock())
         : "");
         
     }
@@ -118,4 +118,9 @@ public class ImportantEventsDTO implements DtoI {
 
         return additionalInfo;
     }
+
+    private String printUTC(long date) {
+        return "<code>" + LocalDateTime.ofInstant(Instant.ofEpochSecond(date), ZoneOffset.UTC) + " UTC</code>";
+    }
+
 }
