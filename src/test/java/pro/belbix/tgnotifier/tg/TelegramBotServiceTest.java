@@ -20,7 +20,7 @@ public class TelegramBotServiceTest {
     public void startTestTelegram() throws InterruptedException {
         telegramBotService.init();
 
-        telegramBotService.sendMessage(0, "test");
+        telegramBotService.sendMessage(0, "test", null);
         while (true) {
             Thread.sleep(100);
         }

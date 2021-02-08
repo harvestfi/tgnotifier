@@ -68,33 +68,71 @@ public class Commands {
         + "Set value to 0 for unsubscribe.";
     public final static String UNKNOWN_COMMAND = "Incorrect or unknown command. Use " + HELP;
 
-    public static String responseForCommand(String command) {
+    public static UserResponse responseForCommand(String command) {
         if (command == null) {
-            return UNKNOWN_COMMAND;
+            return new UserResponse(UNKNOWN_COMMAND, null);
         }
         switch (command) {
             case FARM_CHANGE:
-                return FARM_CHANGE_DESC + "\n" + PERCENT_VALUE_CALLBACK;
+                InlineButton[] buttons_farmChange = {
+                    new InlineButton("10", "10"),
+                    new InlineButton("Cancel", "0")
+                };
+                return new UserResponse(FARM_CHANGE_DESC + "\n" + PERCENT_VALUE_CALLBACK, buttons_farmChange);
             case FARM_MIN:
-                return FARM_MIN_DESC + "\n" + VALUE_CALLBACK;
+                InlineButton[] buttons_farmMin = {
+                    new InlineButton("100", "100"),
+                    new InlineButton("Cancel", "0")
+                };
+                return new UserResponse(FARM_MIN_DESC + "\n" + VALUE_CALLBACK, buttons_farmMin);
             case TVL_CHANGE:
-                return TVL_CHANGE_DESC + "\n" + PERCENT_VALUE_CALLBACK;
+                InlineButton[] buttons_tvlChange = {
+                    new InlineButton("10", "10"),
+                    new InlineButton("Cancel", "0")
+                };
+                return new UserResponse(TVL_CHANGE_DESC + "\n" + PERCENT_VALUE_CALLBACK, buttons_tvlChange);
             case TVL_MIN:
-                return TVL_MIN_DESC + "\n" + VALUE_CALLBACK;
+                InlineButton[] buttons_tvlMin = {
+                    new InlineButton("10000", "10000"),
+                    new InlineButton("Cancel", "0")
+                };
+                return new UserResponse(TVL_MIN_DESC + "\n" + VALUE_CALLBACK, buttons_tvlMin);
             case PS_APR_CHANGE:
-                return PS_APR_CHANGE_DESC + "\n" + PERCENT_VALUE_CALLBACK;
+                InlineButton[] buttons_aprChange = {
+                    new InlineButton("10", "10"),
+                    new InlineButton("Cancel", "0")
+                };
+                return new UserResponse(PS_APR_CHANGE_DESC + "\n" + PERCENT_VALUE_CALLBACK, buttons_aprChange);
             case HARD_WORK_MIN:
-                return HARD_WORK_MIN_DESC + "\n" + VALUE_CALLBACK;
+                InlineButton[] buttons_hrdwMin = {
+                    new InlineButton("10000", "10000"),
+                    new InlineButton("Cancel", "0")
+                };
+                return new UserResponse(HARD_WORK_MIN_DESC + "\n" + VALUE_CALLBACK, buttons_hrdwMin);
             case SUBSCRIBE_ON_ADDRESS:
-                return SUBSCRIBE_ON_ADDRESS + "\n" + ADDRESS_CALLBACK;
+                return new UserResponse(SUBSCRIBE_ON_ADDRESS + "\n" + ADDRESS_CALLBACK, null);
             case STRATEGY_CHANGE:
-                return STRATEGY_CHANGE_DESC + "\n" + CONFIRM_CALLBACK;
+                InlineButton[] buttons_stgChange = {
+                    new InlineButton("Yes", "Yes"),
+                    new InlineButton("No", "No"),
+                    new InlineButton("Cancel", "0")
+                };
+                return new UserResponse(STRATEGY_CHANGE_DESC + "\n" + CONFIRM_CALLBACK, buttons_stgChange);
             case STRATEGY_ANNOUNCE:
-                return STRATEGY_ANNOUNCE_DESC + "\n" + CONFIRM_CALLBACK;
+                InlineButton[] buttons_stgAnnounce = {
+                    new InlineButton("Yes", "Yes"),
+                    new InlineButton("No", "No"),
+                    new InlineButton("Cancel", "0")
+                };
+                return new UserResponse(STRATEGY_ANNOUNCE_DESC + "\n" + CONFIRM_CALLBACK, buttons_stgAnnounce);
             case TOKEN_MINT:
-                return TOKEN_MINT_DESC + "\n" + VALUE_CALLBACK;
+                InlineButton[] buttons_tokenMint = {
+                    new InlineButton("100", "100"),
+                    new InlineButton("Cancel", "0")
+                };
+                return new UserResponse(TOKEN_MINT_DESC + "\n" + VALUE_CALLBACK, buttons_tokenMint);
             }
-        return UNKNOWN_COMMAND;
+        return new UserResponse(UNKNOWN_COMMAND, null);
     }
 
     public static boolean fillFieldForCommand(@NotNull String command, @NotNull UserEntity userEntity, String text) {

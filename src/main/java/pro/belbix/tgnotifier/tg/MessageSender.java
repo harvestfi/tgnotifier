@@ -3,11 +3,15 @@ package pro.belbix.tgnotifier.tg;
 import static com.pengrad.telegrambot.model.request.ParseMode.HTML;
 
 import com.pengrad.telegrambot.Callback;
+import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
+import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
+import com.pengrad.telegrambot.request.AnswerCallbackQuery;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -36,7 +40,11 @@ public class MessageSender {
         this.bot = bot;
     }
 
-    public void send(long chatId, String message) {
+    public void answerCallback(String id){
+        bot.execute(new AnswerCallbackQuery(id));
+    }
+
+    public void send(long chatId, String message, InlineButton[] buttons) {
         executor.submit(() -> {
             Instant lastMessage = lastUserMessages.get(chatId);
             if (lastMessage != null) {
@@ -49,7 +57,20 @@ public class MessageSender {
                     }
                 }
             }
-            bot.execute(new SendMessage(chatId, message).parseMode(HTML).disableWebPagePreview(true), callback);
+
+            SendMessage sendMessage = new SendMessage(chatId, message).parseMode(HTML).disableWebPagePreview(true);
+
+            if (buttons!=null && buttons.length >0){
+                InlineKeyboardButton[] inlineButtons = new InlineKeyboardButton[buttons.length];
+                for (int i = 0; i < buttons.length; i++) {
+                    inlineButtons[i] = new InlineKeyboardButton(buttons[i].getText()).callbackData(buttons[i].getValue());
+                }
+                InlineKeyboardMarkup inlineKeyboard = new InlineKeyboardMarkup(inlineButtons);
+                sendMessage.replyMarkup(inlineKeyboard);
+            }
+
+            bot.execute(sendMessage, callback);
+
             lastUserMessages.put(chatId, Instant.now());
         });
     }
