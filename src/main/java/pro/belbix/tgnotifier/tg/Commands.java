@@ -70,7 +70,7 @@ public class Commands {
                 return new UserResponse(FARM_CHANGE_DESC + "\n" + PERCENT_VALUE_CALLBACK, buttonsFarmChange);
             case FARM_MIN:
                 InlineButton[] buttonsFarmMin = {
-                    new InlineButton("100", "100"),
+                    new InlineButton("1000", "1000"),
                     new InlineButton("Cancel", "0")
                 };
                 return new UserResponse(FARM_MIN_DESC + "\n" + VALUE_CALLBACK, buttonsFarmMin);
@@ -116,7 +116,7 @@ public class Commands {
                 return new UserResponse(STRATEGY_ANNOUNCE_DESC + "\n" + CONFIRM_CALLBACK, buttonsStgAnnounce);
             case TOKEN_MINT:
                 InlineButton[] buttonsTokenMint = {
-                    new InlineButton("100", "100"),
+                    new InlineButton("1000", "1000"),
                     new InlineButton("Cancel", "0")
                 };
                 return new UserResponse(TOKEN_MINT_DESC + "\n" + VALUE_CALLBACK, buttonsTokenMint);
