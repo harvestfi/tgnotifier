@@ -4,8 +4,8 @@ import lombok.Data;
 
 @Data
 public class InlineButton {
-    private String text = null;
-    private String value = null;
+    private String text;
+    private String value;
 
     public InlineButton(String text, String value){
         this.text = text;

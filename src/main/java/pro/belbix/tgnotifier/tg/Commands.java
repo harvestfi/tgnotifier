@@ -74,63 +74,63 @@ public class Commands {
         }
         switch (command) {
             case FARM_CHANGE:
-                InlineButton[] buttons_farmChange = {
+                InlineButton[] buttonsFarmChange = {
                     new InlineButton("10", "10"),
                     new InlineButton("Cancel", "0")
                 };
-                return new UserResponse(FARM_CHANGE_DESC + "\n" + PERCENT_VALUE_CALLBACK, buttons_farmChange);
+                return new UserResponse(FARM_CHANGE_DESC + "\n" + PERCENT_VALUE_CALLBACK, buttonsFarmChange);
             case FARM_MIN:
-                InlineButton[] buttons_farmMin = {
+                InlineButton[] buttonsFarmMin = {
                     new InlineButton("100", "100"),
                     new InlineButton("Cancel", "0")
                 };
-                return new UserResponse(FARM_MIN_DESC + "\n" + VALUE_CALLBACK, buttons_farmMin);
+                return new UserResponse(FARM_MIN_DESC + "\n" + VALUE_CALLBACK, buttonsFarmMin);
             case TVL_CHANGE:
-                InlineButton[] buttons_tvlChange = {
+                InlineButton[] buttonsTVLChange = {
                     new InlineButton("10", "10"),
                     new InlineButton("Cancel", "0")
                 };
-                return new UserResponse(TVL_CHANGE_DESC + "\n" + PERCENT_VALUE_CALLBACK, buttons_tvlChange);
+                return new UserResponse(TVL_CHANGE_DESC + "\n" + PERCENT_VALUE_CALLBACK, buttonsTVLChange);
             case TVL_MIN:
-                InlineButton[] buttons_tvlMin = {
+                InlineButton[] buttonsTVLMin = {
                     new InlineButton("10000", "10000"),
                     new InlineButton("Cancel", "0")
                 };
-                return new UserResponse(TVL_MIN_DESC + "\n" + VALUE_CALLBACK, buttons_tvlMin);
+                return new UserResponse(TVL_MIN_DESC + "\n" + VALUE_CALLBACK, buttonsTVLMin);
             case PS_APR_CHANGE:
-                InlineButton[] buttons_aprChange = {
+                InlineButton[] buttonsAPRChange = {
                     new InlineButton("10", "10"),
                     new InlineButton("Cancel", "0")
                 };
-                return new UserResponse(PS_APR_CHANGE_DESC + "\n" + PERCENT_VALUE_CALLBACK, buttons_aprChange);
+                return new UserResponse(PS_APR_CHANGE_DESC + "\n" + PERCENT_VALUE_CALLBACK, buttonsAPRChange);
             case HARD_WORK_MIN:
-                InlineButton[] buttons_hrdwMin = {
+                InlineButton[] buttonsHrdwMin = {
                     new InlineButton("10000", "10000"),
                     new InlineButton("Cancel", "0")
                 };
-                return new UserResponse(HARD_WORK_MIN_DESC + "\n" + VALUE_CALLBACK, buttons_hrdwMin);
+                return new UserResponse(HARD_WORK_MIN_DESC + "\n" + VALUE_CALLBACK, buttonsHrdwMin);
             case SUBSCRIBE_ON_ADDRESS:
                 return new UserResponse(SUBSCRIBE_ON_ADDRESS + "\n" + ADDRESS_CALLBACK, null);
             case STRATEGY_CHANGE:
-                InlineButton[] buttons_stgChange = {
+                InlineButton[] buttonsStgChange = {
                     new InlineButton("Yes", "Yes"),
                     new InlineButton("No", "No"),
                     new InlineButton("Cancel", "0")
                 };
-                return new UserResponse(STRATEGY_CHANGE_DESC + "\n" + CONFIRM_CALLBACK, buttons_stgChange);
+                return new UserResponse(STRATEGY_CHANGE_DESC + "\n" + CONFIRM_CALLBACK, buttonsStgChange);
             case STRATEGY_ANNOUNCE:
-                InlineButton[] buttons_stgAnnounce = {
+                InlineButton[] buttonsStgAnnounce = {
                     new InlineButton("Yes", "Yes"),
                     new InlineButton("No", "No"),
                     new InlineButton("Cancel", "0")
                 };
-                return new UserResponse(STRATEGY_ANNOUNCE_DESC + "\n" + CONFIRM_CALLBACK, buttons_stgAnnounce);
+                return new UserResponse(STRATEGY_ANNOUNCE_DESC + "\n" + CONFIRM_CALLBACK, buttonsStgAnnounce);
             case TOKEN_MINT:
-                InlineButton[] buttons_tokenMint = {
+                InlineButton[] buttonsTokenMint = {
                     new InlineButton("100", "100"),
                     new InlineButton("Cancel", "0")
                 };
-                return new UserResponse(TOKEN_MINT_DESC + "\n" + VALUE_CALLBACK, buttons_tokenMint);
+                return new UserResponse(TOKEN_MINT_DESC + "\n" + VALUE_CALLBACK, buttonsTokenMint);
             }
         return new UserResponse(UNKNOWN_COMMAND, null);
     }
