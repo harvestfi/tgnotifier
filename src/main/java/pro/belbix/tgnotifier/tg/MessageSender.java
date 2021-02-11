@@ -20,7 +20,7 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class MessageSender {
 
-    private static final long WAIT_MILLIS = 1000;
+    private static final long WAIT_MILLIS = 100;
     private final Callback<SendMessage, SendResponse> callback = new TelegramCallback();
     private final TelegramBot bot;
     private final Map<Long, Instant> lastUserMessages = new HashMap<>();
