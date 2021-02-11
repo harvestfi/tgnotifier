@@ -7,9 +7,9 @@ import lombok.Data;
 
 @Data
 public class UserInput {
-    private final long chatId = 0;
-    private final String text = null;
-    private final Message message = null;
+    private final long chatId;
+    private final String text;
+    private final Message message;
 
     public UserInput(Message message){
         this.chatId = message.chat().id();
@@ -21,6 +21,5 @@ public class UserInput {
         this.chatId = callback.message().chat().id();
         this.text = callback.data();
         this.message = callback.message();
-
     }
 }

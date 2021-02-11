@@ -1,16 +1,18 @@
 package pro.belbix.tgnotifier.tg;
 
 import static com.pengrad.telegrambot.UpdatesListener.CONFIRMED_UPDATES_ALL;
-import static pro.belbix.tgnotifier.tg.Commands.HELP;
 import static pro.belbix.tgnotifier.tg.Commands.HELP_TEXT;
 import static pro.belbix.tgnotifier.tg.Commands.INFO;
 import static pro.belbix.tgnotifier.tg.Commands.UNKNOWN_COMMAND;
 import static pro.belbix.tgnotifier.tg.Commands.WELCOME_MESSAGE;
+import static pro.belbix.tgnotifier.tg.Commands.COMMANDS;
+
 import static pro.belbix.tgnotifier.tg.Commands.responseForCommand;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
+import java.util.Arrays;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -101,23 +103,21 @@ public class TelegramBotService {
         long chatId = input.getChatId();
         log.info("Received message from user " + text);
         try {
-            if (text.startsWith("/")) {
+            if (Arrays.asList(COMMANDS).contains(text)) {
                 handleCommand(input);
             } else {
                 handleValue(input);
             }
         } catch (Exception e) {
             log.error("Error handle message " + text, e);
-            sendMessage(chatId, "Error while handling your request, use correct syntax. " + HELP, null);
+            sendMessage(chatId, "Error while handling your request, use correct syntax.", null);
         }
     }
 
     private void handleCommand(UserInput input) {
         String text = input.getText();
         long chatId = input.getChatId();
-        if (text.startsWith(HELP)) {
-            sendMessage(chatId, HELP_TEXT, null);
-        } else if (text.startsWith(INFO)) {
+        if (text.startsWith(INFO)) {
             sendUserInfo(chatId);
         } else {
             UserResponse callback = responseForCommand(text);
@@ -132,7 +132,7 @@ public class TelegramBotService {
         String text = input.getText();
         long chatId = input.getChatId();
 
-        String result = dbService.updateValueForLastCommand(chatId, text) + ". " + HELP;
+        String result = dbService.updateValueForLastCommand(chatId, text);
         log.info("Value updated with result " + result);
         sendMessage(chatId, result, null);
     }
