@@ -7,9 +7,9 @@ import lombok.Data;
 
 @Data
 public class UserInput {
-    private long chatId = 0;
-    private String text = null;
-    private Message message = null;
+    private final long chatId = 0;
+    private final String text = null;
+    private final Message message = null;
 
     public UserInput(Message message){
         this.chatId = message.chat().id();
