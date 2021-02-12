@@ -39,7 +39,7 @@ public class Commands {
     public final static String HARD_WORK_MIN_DESC = "You will receive notifications about doHardWork calls "
         + "earned more USD than this value";
 
-    public final static String SUBSCRIBE_ON_ADDRESS = "Adress Events";
+    public final static String SUBSCRIBE_ON_ADDRESS = "Address Events";
     public final static String SUBSCRIBE_ON_DESC = "Subscribe to all events related to this address";
 
     public final static String STRATEGY_CHANGE = "Strategy Change";
