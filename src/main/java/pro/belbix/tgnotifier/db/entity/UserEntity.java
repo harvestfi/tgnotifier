@@ -46,17 +46,16 @@ public class UserEntity {
     private Double tokenMint;
 
     public String print() {
-        return "User settings:\n" +
-            FARM_CHANGE + " FARM change: " + farmChange + "\n" +
-            FARM_MIN + " FARM min: " + minFarmAmount + "\n" +
-            TVL_CHANGE + " TVL change: " + tvlChange + "\n" +
-            TVL_MIN + " TVL min: " + minTvlAmount + "\n" +
-            PS_APR_CHANGE + " PS APR change: " + hardWorkChange + "\n" +
-            HARD_WORK_MIN + " Hard Work min: " + minHardWorkAmount + "\n" +
-            SUBSCRIBE_ON_ADDRESS + " Subscribed on: " + subscribedAddress + "\n" +
-            STRATEGY_CHANGE + " Subscribed: " + strategyChange + "\n" +
-            STRATEGY_ANNOUNCE + " Subscribed: " + strategyAnnounce + "\n" +
-            TOKEN_MINT + " Minted min: " + tokenMint + "\n"+
+        return "FARM change: " + farmChange + "\n" +
+            "FARM min: " + minFarmAmount + "\n" +
+            "TVL change: " + tvlChange + "\n" +
+            "TVL min: " + minTvlAmount + "\n" +
+            "PS APR change: " + hardWorkChange + "\n" +
+            "Hard Work min: " + minHardWorkAmount + "\n" +
+            "Subscribed Address: " + subscribedAddress + "\n" +
+            "Strategy Change: " + strategyChange + "\n" +
+            "Strategy Announce: " + strategyAnnounce + "\n" +
+            "Minted min: " + tokenMint + "\n"+
             "";
     }
 }

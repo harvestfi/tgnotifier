@@ -2,12 +2,30 @@ package pro.belbix.tgnotifier.tg;
 
 import static com.pengrad.telegrambot.model.request.ParseMode.HTML;
 
+import static pro.belbix.tgnotifier.tg.Commands.INFO;
+import static pro.belbix.tgnotifier.tg.Commands.FARM_CHANGE;
+import static pro.belbix.tgnotifier.tg.Commands.FARM_MIN;
+import static pro.belbix.tgnotifier.tg.Commands.TVL_CHANGE;
+import static pro.belbix.tgnotifier.tg.Commands.TVL_MIN;
+import static pro.belbix.tgnotifier.tg.Commands.PS_APR_CHANGE;
+import static pro.belbix.tgnotifier.tg.Commands.HARD_WORK_MIN;
+import static pro.belbix.tgnotifier.tg.Commands.SUBSCRIBE_ON_ADDRESS;
+import static pro.belbix.tgnotifier.tg.Commands.STRATEGY_CHANGE;
+import static pro.belbix.tgnotifier.tg.Commands.STRATEGY_ANNOUNCE;
+import static pro.belbix.tgnotifier.tg.Commands.TOKEN_MINT;
+
 import com.pengrad.telegrambot.Callback;
+import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
+import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
+import com.pengrad.telegrambot.model.request.Keyboard;
+import com.pengrad.telegrambot.model.request.ReplyKeyboardMarkup;
+import com.pengrad.telegrambot.request.AnswerCallbackQuery;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -36,7 +54,11 @@ public class MessageSender {
         this.bot = bot;
     }
 
-    public void send(long chatId, String message) {
+    public void answerCallback(String id){
+        bot.execute(new AnswerCallbackQuery(id));
+    }
+
+    public void send(long chatId, String message, InlineButton[] buttons) {
         executor.submit(() -> {
             Instant lastMessage = lastUserMessages.get(chatId);
             if (lastMessage != null) {
@@ -49,7 +71,33 @@ public class MessageSender {
                     }
                 }
             }
-            bot.execute(new SendMessage(chatId, message).parseMode(HTML).disableWebPagePreview(true), callback);
+
+            SendMessage sendMessage = new SendMessage(chatId, message).parseMode(HTML).disableWebPagePreview(true);
+
+            if (buttons!=null && buttons.length >0){
+                InlineKeyboardButton[] inlineButtons = new InlineKeyboardButton[buttons.length];
+                for (int i = 0; i < buttons.length; i++) {
+                    inlineButtons[i] = new InlineKeyboardButton(buttons[i].getText()).callbackData(buttons[i].getValue());
+                }
+                InlineKeyboardMarkup inlineKeyboard = new InlineKeyboardMarkup(inlineButtons);
+                sendMessage.replyMarkup(inlineKeyboard);
+            }
+            else{
+                Keyboard replyKeyboardMarkup = new ReplyKeyboardMarkup(
+                    new String[]{INFO},
+                    new String[]{FARM_CHANGE, FARM_MIN, },
+                    new String[]{TVL_CHANGE,TVL_MIN},
+                    new String[]{PS_APR_CHANGE, HARD_WORK_MIN},
+                    new String[]{STRATEGY_CHANGE, STRATEGY_ANNOUNCE},
+                    new String[]{SUBSCRIBE_ON_ADDRESS, TOKEN_MINT})
+                .resizeKeyboard(true)
+                .oneTimeKeyboard(true)
+                .selective(true);
+                sendMessage.replyMarkup(replyKeyboardMarkup);
+            }
+
+            bot.execute(sendMessage, callback);
+
             lastUserMessages.put(chatId, Instant.now());
         });
     }
