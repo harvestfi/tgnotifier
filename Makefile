@@ -36,7 +36,7 @@ connect-db:
 
 run:
 	@mvn clean
-	@mvn spring-boot:run
+	@mvn spring-boot:run  -Dspring.config.location=file:tmp/application.yml
 
 build:
 	@mvn verify
