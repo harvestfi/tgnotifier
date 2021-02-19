@@ -6,20 +6,28 @@ import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import pro.belbix.tgnotifier.db.entity.UserEntity;
+import pro.belbix.tgnotifier.db.entity.TokenWatchEntity;
 import pro.belbix.tgnotifier.db.repositories.UserRepository;
+import pro.belbix.tgnotifier.db.repositories.TokenWatchRepository;
 
 @Service
 @Log4j2
 public class DbService {
 
     private final UserRepository userRepository;
+    private final TokenWatchRepository tokenWatchRepository;
 
-    public DbService(UserRepository userRepository) {
+    public DbService(UserRepository userRepository, TokenWatchRepository tokenWatchRepository) {
         this.userRepository = userRepository;
+        this.tokenWatchRepository = tokenWatchRepository;
     }
 
     public void save(UserEntity userEntity) {
         userRepository.save(userEntity);
+    }
+
+    public void save(TokenWatchEntity tokenWatchEntity) {
+        tokenWatchRepository.save(tokenWatchEntity);
     }
 
     public void saveNewUser(UserEntity userEntity) {

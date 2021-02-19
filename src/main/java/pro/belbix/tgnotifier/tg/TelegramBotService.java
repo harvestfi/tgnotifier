@@ -74,7 +74,7 @@ public class TelegramBotService {
                 long chatId = input.getChatId();
                 if (!dbService.isKnownChatId(chatId)) {
                     log.info("Chat added " + chatId);
-                    sendMessage(chatId, WELCOME_MESSAGE, null);
+                    sendMessage(chatId, WELCOME_MESSAGE, null, true);
                     saveNewUser(input);
                     continue;
                 }
@@ -86,8 +86,8 @@ public class TelegramBotService {
         return CONFIRMED_UPDATES_ALL;
     }
 
-    public void sendMessage(long chatId, String message, InlineButton[] buttons) {
-        messageSender.send(chatId, message, buttons);
+    public void sendMessage(long chatId, String message, InlineButton[] buttons, boolean sendMenu) {
+        messageSender.send(chatId, message, buttons, sendMenu);
     }
 
     private void saveNewUser(UserInput input) {
@@ -110,7 +110,7 @@ public class TelegramBotService {
             }
         } catch (Exception e) {
             log.error("Error handle message " + text, e);
-            sendMessage(chatId, "Error while handling your request, use correct syntax.", null);
+            sendMessage(chatId, "Error while handling your request, use correct syntax.", null, true);
         }
     }
 
@@ -124,7 +124,7 @@ public class TelegramBotService {
             if (!UNKNOWN_COMMAND.equals(callback.getMessage())) {
                 dbService.updateLastCommand(chatId, text);
             }
-            sendMessage(chatId, callback.getMessage(), callback.getButtons());
+            sendMessage(chatId, callback.getMessage(), callback.getButtons(), callback.getSendMenu());
         }
     }
 
@@ -134,11 +134,11 @@ public class TelegramBotService {
 
         String result = dbService.updateValueForLastCommand(chatId, text);
         log.info("Value updated with result " + result);
-        sendMessage(chatId, result, null);
+        sendMessage(chatId, result, null, true);
     }
 
     private void sendUserInfo(long chatId) {
-        sendMessage(chatId, dbService.findById(chatId).print(), null);
+        sendMessage(chatId, dbService.findById(chatId).print(), null, true);
     }
 
     public void sendDto(DtoI dto) {
@@ -150,15 +150,15 @@ public class TelegramBotService {
             try {
                 CheckResult checkResult = defaultMessageHandler.checkAndUpdate(user, dto);
                 if (checkResult.isSuccess()) {
-                    sendMessage(user.getId(), checkResult.getMessage(), null);
+                    sendMessage(user.getId(), checkResult.getMessage(), null, true);
                 }
                 String ownerMsg = addressesMessageHandler.check(user, dto);
                 if (ownerMsg != null) {
-                    sendMessage(user.getId(), ownerMsg, null);
+                    sendMessage(user.getId(), ownerMsg, null, true);
                 }
                 CheckResult eventResult = importantEventsHandler.checkAndUpdate(user, dto);
                 if (eventResult != null && eventResult.isSuccess()) {
-                    sendMessage(user.getId(), eventResult.getMessage(), null);
+                    sendMessage(user.getId(), eventResult.getMessage(), null, true);
                 }
             } catch (Exception e) {
                 log.error("Error while handle " + dto.print());

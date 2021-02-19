@@ -13,6 +13,8 @@ import static pro.belbix.tgnotifier.tg.Commands.SUBSCRIBE_ON_ADDRESS;
 import static pro.belbix.tgnotifier.tg.Commands.STRATEGY_CHANGE;
 import static pro.belbix.tgnotifier.tg.Commands.STRATEGY_ANNOUNCE;
 import static pro.belbix.tgnotifier.tg.Commands.TOKEN_MINT;
+import static pro.belbix.tgnotifier.tg.Commands.TOKEN_PRICE_SUBSCRIBE;
+import static pro.belbix.tgnotifier.tg.Commands.TOKEN_PRICE_SUBSCRIBE_CHANGE;
 
 import com.pengrad.telegrambot.Callback;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
@@ -58,7 +60,7 @@ public class MessageSender {
         bot.execute(new AnswerCallbackQuery(id));
     }
 
-    public void send(long chatId, String message, InlineButton[] buttons) {
+    public void send(long chatId, String message, InlineButton[] buttons, boolean sendMenu) {
         executor.submit(() -> {
             Instant lastMessage = lastUserMessages.get(chatId);
             if (lastMessage != null) {
@@ -82,14 +84,17 @@ public class MessageSender {
                 InlineKeyboardMarkup inlineKeyboard = new InlineKeyboardMarkup(inlineButtons);
                 sendMessage.replyMarkup(inlineKeyboard);
             }
-            else{
+            else if (sendMenu){
                 Keyboard replyKeyboardMarkup = new ReplyKeyboardMarkup(
                     new String[]{INFO},
                     new String[]{FARM_CHANGE, FARM_MIN, },
                     new String[]{TVL_CHANGE,TVL_MIN},
                     new String[]{PS_APR_CHANGE, HARD_WORK_MIN},
                     new String[]{STRATEGY_CHANGE, STRATEGY_ANNOUNCE},
-                    new String[]{SUBSCRIBE_ON_ADDRESS, TOKEN_MINT})
+                    new String[]{SUBSCRIBE_ON_ADDRESS, TOKEN_MINT},
+                    new String[]{TOKEN_PRICE_SUBSCRIBE, TOKEN_PRICE_SUBSCRIBE_CHANGE}
+                    )
+
                 .resizeKeyboard(true)
                 .oneTimeKeyboard(true)
                 .selective(true);
