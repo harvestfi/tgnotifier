@@ -124,7 +124,7 @@ public class TelegramBotService {
             if (!UNKNOWN_COMMAND.equals(callback.getMessage())) {
                 dbService.updateLastCommand(chatId, text);
             }
-            sendMessage(chatId, callback.getMessage(), callback.getButtons(), callback.getSendMenu());
+            sendMessage(chatId, callback.getMessage(), callback.getButtons(), callback.isSendMenu());
         }
     }
 

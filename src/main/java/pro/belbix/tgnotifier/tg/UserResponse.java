@@ -6,7 +6,7 @@ import lombok.Data;
 public class UserResponse {
     private InlineButton[] buttons = null;
     private String message = null;
-    public boolean sendMenu = false;
+    private boolean sendMenu = false;
 
     public UserResponse(String message, InlineButton[] buttons){
         this.message = message;
