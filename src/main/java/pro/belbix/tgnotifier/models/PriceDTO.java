@@ -39,10 +39,10 @@ public class PriceDTO implements DtoI {
 
     @Override
     public String printValueChanged(double percent) {
-        return token + " "
-            + "changed " + String.format("%.1f", percent) + "% "
+        return otherToken + "/" + token
+            + " changed " + String.format("%.1f", percent) + "% "
             + "current price is " 
-            + String.format("%.1f", price);
+            + String.format("%.4f", price);
     }
 
 }
