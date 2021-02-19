@@ -187,7 +187,7 @@ public class Commands {
             Boolean found = false;
 
             for (TokenWatchEntity token : userTokens) { 
-                if (token.getTokenName() == tokenName){
+                if (token.getTokenName().equals(tokenName)){
                     token.setPriceChange(change);
                     found = true;
                     break;
