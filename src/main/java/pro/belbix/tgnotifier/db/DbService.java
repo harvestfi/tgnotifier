@@ -1,6 +1,8 @@
 package pro.belbix.tgnotifier.db;
 
 import static pro.belbix.tgnotifier.tg.Commands.fillFieldForCommand;
+import static pro.belbix.tgnotifier.tg.Commands.nextCommand;
+import static pro.belbix.tgnotifier.tg.Commands.responseForCommand;
 
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
@@ -9,6 +11,7 @@ import pro.belbix.tgnotifier.db.entity.UserEntity;
 import pro.belbix.tgnotifier.db.entity.TokenWatchEntity;
 import pro.belbix.tgnotifier.db.repositories.UserRepository;
 import pro.belbix.tgnotifier.db.repositories.TokenWatchRepository;
+import pro.belbix.tgnotifier.tg.UserResponse;
 
 @Service
 @Log4j2
@@ -42,29 +45,40 @@ public class DbService {
         return userRepository.findAll();
     }
 
-    public String updateValueForLastCommand(long id, String text) {
+    public UserResponse updateValueForLastCommand(long id, String text) {
 
         UserEntity userEntity = userRepository.findById(id).orElse(null);
         if (userEntity == null) {
-            return "User not found";
+            return new UserResponse("User not found", null, false);
         }
 
         String lastCommand = userEntity.getLastCommand();
 
         if (lastCommand == null) {
-            return "Please, use command before setup value";
+            return new UserResponse("Please, use command before setup value", null, false);
         }
 
         try {
             if (!fillFieldForCommand(lastCommand, userEntity, text)) {
-                return "Command not found";
+                return new UserResponse("Command not found", null, false);
             }
         } catch (IllegalStateException e) {
-            return e.getMessage();
+            return new UserResponse(e.getMessage(), null, false);
         }
-        userEntity.setLastCommand(null);
+        
+        String nextCommandID = nextCommand(lastCommand);
+
+        log.info("next command: " + nextCommandID);
+
+        userEntity.setLastCommand(nextCommandID);
         userRepository.save(userEntity);
-        return "Value successfully updated to " + text;
+        
+        if (nextCommandID!=null){
+            return responseForCommand(nextCommandID);
+        }
+        else {
+            return new UserResponse("Value successfully updated to " + text, null, false);
+        }
     }
 
     public void updateLastCommand(long id, String command) {

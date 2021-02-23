@@ -140,6 +140,15 @@ public class Commands {
         return new UserResponse(UNKNOWN_COMMAND, null);
     }
 
+    public static String nextCommand(@NotNull String command){
+        switch (command) {
+            case TOKEN_PRICE_SUBSCRIBE:
+                return TOKEN_PRICE_SUBSCRIBE_CHANGE;
+        }
+
+        return null;
+    }
+
     public static boolean fillFieldForCommand(@NotNull String command, @NotNull UserEntity userEntity, String text) {
         if (FARM_CHANGE.equals(command)) {
             userEntity.setFarmChange(textToDouble(text));

@@ -132,9 +132,9 @@ public class TelegramBotService {
         String text = input.getText();
         long chatId = input.getChatId();
 
-        String result = dbService.updateValueForLastCommand(chatId, text);
+        UserResponse result = dbService.updateValueForLastCommand(chatId, text);
         log.info("Value updated with result " + result);
-        sendMessage(chatId, result, null, true);
+        sendMessage(chatId, result.getMessage(), result.getButtons(), result.isSendMenu());
     }
 
     private void sendUserInfo(long chatId) {
