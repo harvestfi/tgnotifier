@@ -6,6 +6,7 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 import pro.belbix.tgnotifier.db.entity.UserEntity;
 import pro.belbix.tgnotifier.db.entity.TokenWatchEntity;
+import com.vdurmont.emoji.EmojiParser;
 
 public class Commands {
 
@@ -17,8 +18,13 @@ public class Commands {
     public final static String ADDRESS_CALLBACK = "Now send correct hash for address";
     public final static String CONFIRM_CALLBACK = "Are you sure? Type `yes` to confirm";
 
-    public final static String INFO = "Show Settings";
+    public final static String INFO = "⚙ Show Settings";
     public final static String INFO_DESC = "Show your settings";
+
+    public final static String FARM_NOTIFICATIONS = "🌱   FARM Price Notifications";
+    public final static String TVL_NOTIFICATIONS = "💰   TVL Change Notifications";
+    public final static String STRATEGY_NOTIFICATIONS = "🗳   Strategy Change Notifications";
+    public final static String PS_NOTIFICATIONS = "🚜   Profit Share Notifications";
 
     public final static String FARM_CHANGE = "FARM Price Change %";
     public final static String FARM_CHANGE_DESC = "FARM price change notification, in %";
@@ -54,7 +60,7 @@ public class Commands {
     public final static String TOKEN_MINT_DESC = "Receive notifications about FARM token (new emissions) "
         + "minted more than set value";
 
-    public final static String TOKEN_PRICE_SUBSCRIBE = "Token Price Subscribe";
+    public final static String TOKEN_PRICE_SUBSCRIBE = "🪙   Token Price Subscribe";
     public final static String TOKEN_PRICE_SUBSCRIBE_DESC = "Receive notifications about a token price change";
 
     public final static String TOKEN_PRICE_SUBSCRIBE_CHANGE = "Token Price Change Subscribe";
@@ -63,13 +69,37 @@ public class Commands {
     public final static String HELP_TEXT = "Select an entry from the menu below.";
     public final static String UNKNOWN_COMMAND = "Incorrect or unknown command.";
 
-    public final static String[] COMMANDS = new String[]{INFO, FARM_CHANGE, FARM_MIN, TVL_CHANGE, TVL_MIN, PS_APR_CHANGE, HARD_WORK_MIN, SUBSCRIBE_ON_ADDRESS, STRATEGY_CHANGE, STRATEGY_ANNOUNCE, TOKEN_MINT, TOKEN_PRICE_SUBSCRIBE, TOKEN_PRICE_SUBSCRIBE_CHANGE};
+    public final static String[] COMMANDS = new String[]{INFO, FARM_NOTIFICATIONS, TVL_NOTIFICATIONS, STRATEGY_NOTIFICATIONS, PS_NOTIFICATIONS, FARM_CHANGE, FARM_MIN, TVL_CHANGE, TVL_MIN, PS_APR_CHANGE, HARD_WORK_MIN, SUBSCRIBE_ON_ADDRESS, STRATEGY_CHANGE, STRATEGY_ANNOUNCE, TOKEN_MINT, TOKEN_PRICE_SUBSCRIBE, TOKEN_PRICE_SUBSCRIBE_CHANGE};
 
     public static UserResponse responseForCommand(String command) {
         if (command == null) {
             return new UserResponse(UNKNOWN_COMMAND, null);
         }
         switch (command) {
+            case FARM_NOTIFICATIONS: 
+                InlineButton[] buttonsFarmNotifications = {
+                    new InlineButton(FARM_CHANGE, FARM_CHANGE),
+                    new InlineButton(FARM_MIN, FARM_MIN)
+                };
+                return new UserResponse("Select Option", buttonsFarmNotifications);
+            case TVL_NOTIFICATIONS: 
+                InlineButton[] buttonsTvlNotifications = {
+                    new InlineButton(TVL_CHANGE, TVL_CHANGE),
+                    new InlineButton(TVL_MIN, TVL_MIN)
+                };
+                return new UserResponse("Select Option", buttonsTvlNotifications);
+            case STRATEGY_NOTIFICATIONS: 
+                InlineButton[] buttonsStrategyNotifications = {
+                    new InlineButton(STRATEGY_CHANGE, STRATEGY_CHANGE),
+                    new InlineButton(STRATEGY_ANNOUNCE, STRATEGY_ANNOUNCE)
+                };
+                return new UserResponse("Select Option", buttonsStrategyNotifications);
+            case PS_NOTIFICATIONS: 
+                InlineButton[] buttonsPSNotifications = {
+                    new InlineButton(PS_APR_CHANGE, PS_APR_CHANGE),
+                    new InlineButton(HARD_WORK_MIN, HARD_WORK_MIN)
+                };
+                return new UserResponse("Select Option", buttonsPSNotifications);
             case FARM_CHANGE:
                 InlineButton[] buttonsFarmChange = {
                     new InlineButton("10", "10"),
@@ -191,27 +221,22 @@ public class Commands {
         if (tokenName==null){
             throw new IllegalStateException("Token not selected");
         }
-        else{
-            List<TokenWatchEntity> userTokens = userEntity.getTokenWatchList();
-            Boolean found = false;
+        List<TokenWatchEntity> userTokens = userEntity.getTokenWatchList();
 
-            for (TokenWatchEntity token : userTokens) { 
-                if (token.getTokenName().equals(tokenName)){
-                    token.setPriceChange(change);
-                    found = true;
-                    break;
-                }
-            }
+        TokenWatchEntity existingToken = userTokens.stream()
+        .filter(token -> token.getTokenName().equals(tokenName))
+        .findAny()
+        .orElse(null);
 
-            if (!found){
-                TokenWatchEntity newToken = new TokenWatchEntity();
-                newToken.setTokenName(tokenName);
-                newToken.setPriceChange(change);
-                newToken.setUser(userEntity);
-                userTokens.add(newToken);
-            }
-            
-            userEntity.setTokenWatchList(userTokens);
+        if (existingToken!=null){
+            existingToken.setPriceChange(change);
+        }
+        else {
+            TokenWatchEntity newToken = new TokenWatchEntity();
+            newToken.setTokenName(tokenName);
+            newToken.setPriceChange(change);
+            newToken.setUser(userEntity);
+            userTokens.add(newToken);
         }
     }
 
