@@ -36,23 +36,10 @@ public class HarvestDTO implements DtoI {
     @Override
     public String print() {
         return EmojiParser.parseToUnicode(
-                methodName() + " " +
+            methodName() + " " +
                 String.format("%,.2f$ ", usdAmount) +
                 vault + " " +
                 String.format("%,.2f$ ", lastUsdTvl) + "\n" +
-                String.format("%,.2f$ All TVL ", lastAllUsdTvl) +
-                "<a href=\"https://etherscan.io/tx/" + hash + "\">Etherscan</a>" +
-                    (description != null ? description + "\n" : "") +
-                "");
-    }
-
-    @Override
-    public String printValueChanged(double percent) {
-        return EmojiParser.parseToUnicode(
-            percentChangeType(percent) + " "
-                + vault + " TVL changed on " +
-                String.format("%.1f%%", percent) +
-                "\n" +
                 String.format("%,.2f$ All TVL ", lastAllUsdTvl) +
                 "<a href=\"https://etherscan.io/tx/" + hash + "\">Etherscan</a>" +
                 (description != null ? description + "\n" : "") +
@@ -71,5 +58,18 @@ public class HarvestDTO implements DtoI {
             default:
                 return "⁉️" + methodName;
         }
+    }
+
+    @Override
+    public String printValueChanged(double percent) {
+        return EmojiParser.parseToUnicode(
+            percentChangeType(percent) + " "
+                + vault + " TVL changed on " +
+                String.format("%.1f%%", percent) +
+                "\n" +
+                String.format("%,.2f$ All TVL ", lastAllUsdTvl) +
+                "<a href=\"https://etherscan.io/tx/" + hash + "\">Etherscan</a>" +
+                (description != null ? description + "\n" : "") +
+                "");
     }
 }

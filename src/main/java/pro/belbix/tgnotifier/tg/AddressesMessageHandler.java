@@ -23,10 +23,6 @@ public class AddressesMessageHandler {
         return null;
     }
 
-    private String createResponse(String owner, String print) {
-        return "\uD83E\uDD14 Some activity with " + owner + "\n" + print;
-    }
-
     private boolean checkOwner(String userSubscriptions, String owner) {
         if (StringUtils.isEmpty(userSubscriptions) || StringUtils.isEmpty(owner)) {
             return false;
@@ -37,5 +33,9 @@ public class AddressesMessageHandler {
             }
         }
         return false;
+    }
+
+    private String createResponse(String owner, String print) {
+        return "\uD83E\uDD14 Some activity with " + owner + "\n" + print;
     }
 }

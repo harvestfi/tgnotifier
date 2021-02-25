@@ -6,9 +6,9 @@ import pro.belbix.tgnotifier.db.entity.UserEntity;
 import pro.belbix.tgnotifier.models.DtoI;
 import pro.belbix.tgnotifier.models.ImportantEventsDTO;
 
-
 @Service
 public class ImportantEventsHandler {
+
     private final Properties properties;
 
     public ImportantEventsHandler(Properties properties) {
@@ -18,11 +18,11 @@ public class ImportantEventsHandler {
     public CheckResult checkAndUpdate(UserEntity user, DtoI dto) {
         if (dto instanceof ImportantEventsDTO) {
             CheckResult result = new CheckResult();
-            ImportantEventsDTO eventDto = (ImportantEventsDTO) dto; 
+            ImportantEventsDTO eventDto = (ImportantEventsDTO) dto;
             eventDto.updateInfo();
-        
+
             if ("StrategyChanged".equals(eventDto.getEvent())) {
-                 checkStrategyChangedDto(user, eventDto, result);
+                checkStrategyChangedDto(user, eventDto, result);
             } else if ("StrategyAnnounced".equals(eventDto.getEvent())) {
                 checkStrategyAnnouncedDto(user, eventDto, result);
             } else if ("TokenMinted".equals(eventDto.getEvent())) {
@@ -56,7 +56,7 @@ public class ImportantEventsHandler {
         }
     }
 
-    private void checkTokenMintedDto(UserEntity user, ImportantEventsDTO dto, CheckResult checkResult) {     
+    private void checkTokenMintedDto(UserEntity user, ImportantEventsDTO dto, CheckResult checkResult) {
         if (user.getTokenMint() != null
             && user.getTokenMint() != 0.0
             && dto.getMintAmount() != null
@@ -68,7 +68,6 @@ public class ImportantEventsHandler {
             checkResult.setMessage(dto.printTokenMinted());
         }
     }
-
 
 
 }

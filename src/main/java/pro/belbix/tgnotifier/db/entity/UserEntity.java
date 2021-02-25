@@ -1,27 +1,35 @@
 package pro.belbix.tgnotifier.db.entity;
 
-import static pro.belbix.tgnotifier.tg.Commands.FARM_CHANGE;
-import static pro.belbix.tgnotifier.tg.Commands.FARM_MIN;
-import static pro.belbix.tgnotifier.tg.Commands.HARD_WORK_MIN;
-import static pro.belbix.tgnotifier.tg.Commands.PS_APR_CHANGE;
-import static pro.belbix.tgnotifier.tg.Commands.SUBSCRIBE_ON_ADDRESS;
-import static pro.belbix.tgnotifier.tg.Commands.TVL_CHANGE;
-import static pro.belbix.tgnotifier.tg.Commands.TVL_MIN;
-import static pro.belbix.tgnotifier.tg.Commands.STRATEGY_CHANGE;
-import static pro.belbix.tgnotifier.tg.Commands.STRATEGY_ANNOUNCE;
-import static pro.belbix.tgnotifier.tg.Commands.TOKEN_MINT;
-
-import java.util.List;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.OneToMany;
+import java.util.Set;
 import javax.persistence.CascadeType;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
-
+import javax.persistence.Id;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedSubgraph;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import lombok.Data;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
+@NamedEntityGraph(
+    name = "users-graph.all",
+    attributeNodes = {
+        @NamedAttributeNode(value = "tokenWatch", subgraph = "tokenwatch.all")
+    },
+    subgraphs = {
+        @NamedSubgraph(
+            name = "tokenwatch.all",
+            attributeNodes = {
+                @NamedAttributeNode("id"),
+            }
+        ),
+    }
+)
 @Entity
 @Table(name = "users")
 @Data
@@ -51,15 +59,17 @@ public class UserEntity {
     private Boolean strategyAnnounce;
     private Double tokenMint;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<TokenWatchEntity> tokenWatchList;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,
+        fetch = FetchType.EAGER, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Set<TokenWatchEntity> tokenWatch;
     private String selectedToken;
 
     public String print() {
 
         String subscribedTokens = "";
 
-        for (TokenWatchEntity token : tokenWatchList) { 
+        for (TokenWatchEntity token : tokenWatch) {
             subscribedTokens += token.print();
         }
 

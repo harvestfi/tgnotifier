@@ -44,19 +44,6 @@ public class UniswapDTO implements DtoI {
                 "");
     }
 
-    @Override
-    public String printValueChanged(double percent) {
-        return EmojiParser.parseToUnicode(
-            percentChangeType(percent) + " "
-                + coin + " price changed on " +
-                String.format("%.1f%%", percent) +
-                "\n" +
-                price() + "\uD83D\uDCB2 per FARM " +
-                "<a href=\"https://etherscan.io/tx/" + hash + "\">Etherscan</a>" +
-                (description != null ? description + "\n" : "") +
-                "");
-    }
-
     private String type() {
         if (type == null) {
             return "?\uD83D\uDE29?";
@@ -101,6 +88,19 @@ public class UniswapDTO implements DtoI {
 
     private String price() {
         return String.format("%.2f", lastPrice);
+    }
+
+    @Override
+    public String printValueChanged(double percent) {
+        return EmojiParser.parseToUnicode(
+            percentChangeType(percent) + " "
+                + coin + " price changed on " +
+                String.format("%.1f%%", percent) +
+                "\n" +
+                price() + "\uD83D\uDCB2 per FARM " +
+                "<a href=\"https://etherscan.io/tx/" + hash + "\">Etherscan</a>" +
+                (description != null ? description + "\n" : "") +
+                "");
     }
 
 }

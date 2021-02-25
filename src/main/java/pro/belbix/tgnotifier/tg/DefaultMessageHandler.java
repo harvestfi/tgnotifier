@@ -1,16 +1,16 @@
 package pro.belbix.tgnotifier.tg;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import pro.belbix.tgnotifier.Properties;
 import pro.belbix.tgnotifier.db.DbService;
-import pro.belbix.tgnotifier.db.entity.UserEntity;
 import pro.belbix.tgnotifier.db.entity.TokenWatchEntity;
+import pro.belbix.tgnotifier.db.entity.UserEntity;
 import pro.belbix.tgnotifier.models.DtoI;
 import pro.belbix.tgnotifier.models.HardWorkDTO;
 import pro.belbix.tgnotifier.models.HarvestDTO;
-import pro.belbix.tgnotifier.models.UniswapDTO;
 import pro.belbix.tgnotifier.models.PriceDTO;
-import lombok.extern.log4j.Log4j2;
+import pro.belbix.tgnotifier.models.UniswapDTO;
 
 @Log4j2
 @Service
@@ -82,27 +82,42 @@ public class DefaultMessageHandler {
         }
     }
 
-
-    //debug why notification is not being sent
     private void checkPriceDto(UserEntity user, PriceDTO dto, CheckResult checkResult) {
 
-        for (TokenWatchEntity token : user.getTokenWatchList()) { 
+        for (TokenWatchEntity token : user.getTokenWatch()) {
 
-            if (token.getTokenName().equals(dto.getToken())){
+            // todo use contracts instead of names
+            if (token.getTokenName().equals(dto.getToken())) {
                 if (token.getLastPrice() == null) {
                     token.setLastPrice(dto.getPrice());
                     dbService.save(token);
                 }
-                if (checkPricePercentChange(token.getLastPrice(), token.getPriceChange(), dto.getPrice(), dto,
-                    checkResult)) {
+                if (checkPricePercentChange(
+                    token.getLastPrice(),
+                    token.getPriceChange(),
+                    dto.getPrice(),
+                    dto,
+                    checkResult)
+                ) {
                     token.setLastPrice(dto.getPrice());
                     dbService.save(token);
                 }
             }
 
         }
+    }
 
-        return;
+    private void checkCurrentValue(Double userMinAmount, Double dtoAmount, DtoI dto, CheckResult checkResult) {
+        if (userMinAmount != null
+            && userMinAmount != 0.0
+            && dtoAmount != null
+            && userMinAmount < dtoAmount) {
+            if (properties.isShowDescriptions()) {
+                dto.setDescription("Trigger " + String.format("%.2f > %.2f", dtoAmount, userMinAmount));
+            }
+            checkResult.setSuccess(true);
+            checkResult.setMessage(dto.print());
+        }
     }
 
     private boolean checkPricePercentChange(Double userLastValue, Double userChange, Double dtoLastValue, DtoI dto,
@@ -125,19 +140,6 @@ public class DefaultMessageHandler {
             }
         }
         return false;
-    }
-
-    private void checkCurrentValue(Double userMinAmount, Double dtoAmount, DtoI dto, CheckResult checkResult) {
-        if (userMinAmount != null
-            && userMinAmount != 0.0
-            && dtoAmount != null
-            && userMinAmount < dtoAmount) {
-            if (properties.isShowDescriptions()) {
-                dto.setDescription("Trigger " + String.format("%.2f > %.2f", dtoAmount, userMinAmount));
-            }
-            checkResult.setSuccess(true);
-            checkResult.setMessage(dto.print());
-        }
     }
 
 }

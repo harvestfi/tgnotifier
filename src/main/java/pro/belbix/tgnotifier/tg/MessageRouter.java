@@ -8,9 +8,9 @@ import pro.belbix.tgnotifier.models.DtoI;
 import pro.belbix.tgnotifier.ws.FrameHandlerWithQueue;
 import pro.belbix.tgnotifier.ws.HardWorkFrameHandler;
 import pro.belbix.tgnotifier.ws.HarvestFrameHandler;
-import pro.belbix.tgnotifier.ws.UniFrameHandler;
 import pro.belbix.tgnotifier.ws.ImportantEventsFrameHandler;
 import pro.belbix.tgnotifier.ws.PriceEventsHandler;
+import pro.belbix.tgnotifier.ws.UniFrameHandler;
 
 @Service
 @Log4j2

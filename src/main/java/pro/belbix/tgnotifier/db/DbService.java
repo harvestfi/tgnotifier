@@ -7,10 +7,10 @@ import static pro.belbix.tgnotifier.tg.Commands.responseForCommand;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
-import pro.belbix.tgnotifier.db.entity.UserEntity;
 import pro.belbix.tgnotifier.db.entity.TokenWatchEntity;
-import pro.belbix.tgnotifier.db.repositories.UserRepository;
+import pro.belbix.tgnotifier.db.entity.UserEntity;
 import pro.belbix.tgnotifier.db.repositories.TokenWatchRepository;
+import pro.belbix.tgnotifier.db.repositories.UserRepository;
 import pro.belbix.tgnotifier.tg.UserResponse;
 
 @Service
@@ -65,18 +65,17 @@ public class DbService {
         } catch (IllegalStateException e) {
             return new UserResponse(e.getMessage(), null, false);
         }
-        
+
         String nextCommandID = nextCommand(lastCommand);
 
         log.info("next command: " + nextCommandID);
 
         userEntity.setLastCommand(nextCommandID);
         userRepository.save(userEntity);
-        
-        if (nextCommandID!=null){
+
+        if (nextCommandID != null) {
             return responseForCommand(nextCommandID);
-        }
-        else {
+        } else {
             return new UserResponse("Value successfully updated to " + text, null, false);
         }
     }

@@ -1,28 +1,26 @@
 package pro.belbix.tgnotifier.tg;
 
 import static com.pengrad.telegrambot.model.request.ParseMode.HTML;
-
-import static pro.belbix.tgnotifier.tg.Commands.INFO;
 import static pro.belbix.tgnotifier.tg.Commands.FARM_NOTIFICATIONS;
-import static pro.belbix.tgnotifier.tg.Commands.TVL_NOTIFICATIONS;
+import static pro.belbix.tgnotifier.tg.Commands.INFO;
 import static pro.belbix.tgnotifier.tg.Commands.PS_NOTIFICATIONS;
-import static pro.belbix.tgnotifier.tg.Commands.SUBSCRIBE_ON_ADDRESS;
 import static pro.belbix.tgnotifier.tg.Commands.STRATEGY_NOTIFICATIONS;
+import static pro.belbix.tgnotifier.tg.Commands.SUBSCRIBE_ON_ADDRESS;
 import static pro.belbix.tgnotifier.tg.Commands.TOKEN_MINT;
 import static pro.belbix.tgnotifier.tg.Commands.TOKEN_PRICE_SUBSCRIBE;
+import static pro.belbix.tgnotifier.tg.Commands.TVL_NOTIFICATIONS;
 
 import com.pengrad.telegrambot.Callback;
+import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.model.request.Keyboard;
 import com.pengrad.telegrambot.model.request.ReplyKeyboardMarkup;
 import com.pengrad.telegrambot.request.AnswerCallbackQuery;
-import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -51,7 +49,7 @@ public class MessageSender {
         this.bot = bot;
     }
 
-    public void answerCallback(String id){
+    public void answerCallback(String id) {
         bot.execute(new AnswerCallbackQuery(id));
     }
 
@@ -71,25 +69,25 @@ public class MessageSender {
 
             SendMessage sendMessage = new SendMessage(chatId, message).parseMode(HTML).disableWebPagePreview(true);
 
-            if (buttons!=null && buttons.length >0){
+            if (buttons != null && buttons.length > 0) {
                 InlineKeyboardButton[] inlineButtons = new InlineKeyboardButton[buttons.length];
                 for (int i = 0; i < buttons.length; i++) {
-                    inlineButtons[i] = new InlineKeyboardButton(buttons[i].getText()).callbackData(buttons[i].getValue());
+                    inlineButtons[i] = new InlineKeyboardButton(buttons[i].getText())
+                        .callbackData(buttons[i].getValue());
                 }
                 InlineKeyboardMarkup inlineKeyboard = new InlineKeyboardMarkup(inlineButtons);
                 sendMessage.replyMarkup(inlineKeyboard);
-            }
-            else if (sendMenu){
+            } else if (sendMenu) {
                 Keyboard replyKeyboardMarkup = new ReplyKeyboardMarkup(
                     new String[]{INFO, PS_NOTIFICATIONS},
                     new String[]{FARM_NOTIFICATIONS, TVL_NOTIFICATIONS},
                     new String[]{STRATEGY_NOTIFICATIONS, TOKEN_PRICE_SUBSCRIBE},
                     new String[]{SUBSCRIBE_ON_ADDRESS, TOKEN_MINT}
-                    )
+                )
 
-                .resizeKeyboard(true)
-                .oneTimeKeyboard(true)
-                .selective(true);
+                    .resizeKeyboard(true)
+                    .oneTimeKeyboard(true)
+                    .selective(true);
                 sendMessage.replyMarkup(replyKeyboardMarkup);
             }
 

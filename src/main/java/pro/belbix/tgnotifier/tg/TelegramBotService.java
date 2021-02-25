@@ -1,16 +1,13 @@
 package pro.belbix.tgnotifier.tg;
 
 import static com.pengrad.telegrambot.UpdatesListener.CONFIRMED_UPDATES_ALL;
-import static pro.belbix.tgnotifier.tg.Commands.HELP_TEXT;
+import static pro.belbix.tgnotifier.tg.Commands.COMMANDS;
 import static pro.belbix.tgnotifier.tg.Commands.INFO;
 import static pro.belbix.tgnotifier.tg.Commands.UNKNOWN_COMMAND;
 import static pro.belbix.tgnotifier.tg.Commands.WELCOME_MESSAGE;
-import static pro.belbix.tgnotifier.tg.Commands.COMMANDS;
-
 import static pro.belbix.tgnotifier.tg.Commands.responseForCommand;
 
 import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import java.util.Arrays;
 import java.util.List;
@@ -28,13 +25,13 @@ public class TelegramBotService {
     private final DbService dbService;
     private final Properties properties;
     private final DefaultMessageHandler defaultMessageHandler;
-    private MessageSender messageSender;
     private final AddressesMessageHandler addressesMessageHandler = new AddressesMessageHandler();
     private final ImportantEventsHandler importantEventsHandler;
+    private MessageSender messageSender;
 
     public TelegramBotService(DbService dbService, Properties properties,
                               DefaultMessageHandler defaultMessageHandler,
-                              ImportantEventsHandler importantEventsHandler){
+                              ImportantEventsHandler importantEventsHandler) {
         this.properties = properties;
         this.dbService = dbService;
         this.defaultMessageHandler = defaultMessageHandler;
@@ -46,20 +43,6 @@ public class TelegramBotService {
         bot.setUpdatesListener(this::updatesListener);
         messageSender = new MessageSender(bot);
         log.info("Telegram Bot started");
-    }
-
-    private UserInput getUserInput(Update u){
-        if (u == null){
-            return null;
-        }
-        if (u.message() != null){
-            return new UserInput(u.message());
-        }
-        if(u.callbackQuery() != null){
-            messageSender.answerCallback(u.callbackQuery().id());
-            return new UserInput(u.callbackQuery());
-        }
-        return null;
     }
 
     private int updatesListener(List<Update> updates) {
@@ -84,6 +67,20 @@ public class TelegramBotService {
             log.error("Update listener err", e);
         }
         return CONFIRMED_UPDATES_ALL;
+    }
+
+    private UserInput getUserInput(Update u) {
+        if (u == null) {
+            return null;
+        }
+        if (u.message() != null) {
+            return new UserInput(u.message());
+        }
+        if (u.callbackQuery() != null) {
+            messageSender.answerCallback(u.callbackQuery().id());
+            return new UserInput(u.callbackQuery());
+        }
+        return null;
     }
 
     public void sendMessage(long chatId, String message, InlineButton[] buttons, boolean sendMenu) {

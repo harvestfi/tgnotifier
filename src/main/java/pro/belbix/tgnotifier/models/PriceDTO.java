@@ -1,10 +1,7 @@
 package pro.belbix.tgnotifier.models;
 
 import java.time.Instant;
-import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.Table;
 import lombok.Data;
 
 @Data
@@ -41,7 +38,7 @@ public class PriceDTO implements DtoI {
     public String printValueChanged(double percent) {
         return otherToken + "/" + token
             + " changed " + String.format("%.1f", percent) + "% "
-            + "current price is " 
+            + "current price is "
             + String.format("%.4f", price);
     }
 
