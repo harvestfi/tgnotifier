@@ -10,6 +10,7 @@ import pro.belbix.tgnotifier.ws.HardWorkFrameHandler;
 import pro.belbix.tgnotifier.ws.HarvestFrameHandler;
 import pro.belbix.tgnotifier.ws.UniFrameHandler;
 import pro.belbix.tgnotifier.ws.ImportantEventsFrameHandler;
+import pro.belbix.tgnotifier.ws.PriceEventsHandler;
 
 @Service
 @Log4j2
@@ -22,17 +23,20 @@ public class MessageRouter {
     private final HarvestFrameHandler harvestFrameHandler;
     private final HardWorkFrameHandler hardWorkFrameHandler;
     private final ImportantEventsFrameHandler importantEventsFrameHandler;
+    private final PriceEventsHandler priceEventsHandler;
 
     public MessageRouter(TelegramBotService telegramBotService,
                          UniFrameHandler uniFrameHandler,
                          HarvestFrameHandler harvestFrameHandler,
                          HardWorkFrameHandler hardWorkFrameHandler,
-                         ImportantEventsFrameHandler importantEventsFrameHandler) {
+                         ImportantEventsFrameHandler importantEventsFrameHandler,
+                         PriceEventsHandler priceEventsHandler) {
         this.telegramBotService = telegramBotService;
         this.uniFrameHandler = uniFrameHandler;
         this.harvestFrameHandler = harvestFrameHandler;
         this.hardWorkFrameHandler = hardWorkFrameHandler;
         this.importantEventsFrameHandler = importantEventsFrameHandler;
+        this.priceEventsHandler = priceEventsHandler;
     }
 
     @PostConstruct
@@ -41,6 +45,7 @@ public class MessageRouter {
         routeFrom(harvestFrameHandler);
         routeFrom(hardWorkFrameHandler);
         routeFrom(importantEventsFrameHandler);
+        routeFrom(priceEventsHandler);
         log.info("Telegram Message Router initialized");
     }
 

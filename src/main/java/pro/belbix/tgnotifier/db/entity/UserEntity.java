@@ -11,9 +11,15 @@ import static pro.belbix.tgnotifier.tg.Commands.STRATEGY_CHANGE;
 import static pro.belbix.tgnotifier.tg.Commands.STRATEGY_ANNOUNCE;
 import static pro.belbix.tgnotifier.tg.Commands.TOKEN_MINT;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.OneToMany;
+import javax.persistence.CascadeType;
+import javax.persistence.FetchType;
+
 import lombok.Data;
 
 @Entity
@@ -45,7 +51,18 @@ public class UserEntity {
     private Boolean strategyAnnounce;
     private Double tokenMint;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<TokenWatchEntity> tokenWatchList;
+    private String selectedToken;
+
     public String print() {
+
+        String subscribedTokens = "";
+
+        for (TokenWatchEntity token : tokenWatchList) { 
+            subscribedTokens += token.print();
+        }
+
         return "FARM change: " + farmChange + "\n" +
             "FARM min: " + minFarmAmount + "\n" +
             "TVL change: " + tvlChange + "\n" +
@@ -55,7 +72,7 @@ public class UserEntity {
             "Subscribed Address: " + subscribedAddress + "\n" +
             "Strategy Change: " + strategyChange + "\n" +
             "Strategy Announce: " + strategyAnnounce + "\n" +
-            "Minted min: " + tokenMint + "\n"+
-            "";
+            "Selected Tokens: \n" +
+            subscribedTokens;
     }
 }

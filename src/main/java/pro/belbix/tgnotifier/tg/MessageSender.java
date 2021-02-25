@@ -3,16 +3,13 @@ package pro.belbix.tgnotifier.tg;
 import static com.pengrad.telegrambot.model.request.ParseMode.HTML;
 
 import static pro.belbix.tgnotifier.tg.Commands.INFO;
-import static pro.belbix.tgnotifier.tg.Commands.FARM_CHANGE;
-import static pro.belbix.tgnotifier.tg.Commands.FARM_MIN;
-import static pro.belbix.tgnotifier.tg.Commands.TVL_CHANGE;
-import static pro.belbix.tgnotifier.tg.Commands.TVL_MIN;
-import static pro.belbix.tgnotifier.tg.Commands.PS_APR_CHANGE;
-import static pro.belbix.tgnotifier.tg.Commands.HARD_WORK_MIN;
+import static pro.belbix.tgnotifier.tg.Commands.FARM_NOTIFICATIONS;
+import static pro.belbix.tgnotifier.tg.Commands.TVL_NOTIFICATIONS;
+import static pro.belbix.tgnotifier.tg.Commands.PS_NOTIFICATIONS;
 import static pro.belbix.tgnotifier.tg.Commands.SUBSCRIBE_ON_ADDRESS;
-import static pro.belbix.tgnotifier.tg.Commands.STRATEGY_CHANGE;
-import static pro.belbix.tgnotifier.tg.Commands.STRATEGY_ANNOUNCE;
+import static pro.belbix.tgnotifier.tg.Commands.STRATEGY_NOTIFICATIONS;
 import static pro.belbix.tgnotifier.tg.Commands.TOKEN_MINT;
+import static pro.belbix.tgnotifier.tg.Commands.TOKEN_PRICE_SUBSCRIBE;
 
 import com.pengrad.telegrambot.Callback;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
@@ -58,7 +55,7 @@ public class MessageSender {
         bot.execute(new AnswerCallbackQuery(id));
     }
 
-    public void send(long chatId, String message, InlineButton[] buttons) {
+    public void send(long chatId, String message, InlineButton[] buttons, boolean sendMenu) {
         executor.submit(() -> {
             Instant lastMessage = lastUserMessages.get(chatId);
             if (lastMessage != null) {
@@ -82,14 +79,14 @@ public class MessageSender {
                 InlineKeyboardMarkup inlineKeyboard = new InlineKeyboardMarkup(inlineButtons);
                 sendMessage.replyMarkup(inlineKeyboard);
             }
-            else{
+            else if (sendMenu){
                 Keyboard replyKeyboardMarkup = new ReplyKeyboardMarkup(
-                    new String[]{INFO},
-                    new String[]{FARM_CHANGE, FARM_MIN, },
-                    new String[]{TVL_CHANGE,TVL_MIN},
-                    new String[]{PS_APR_CHANGE, HARD_WORK_MIN},
-                    new String[]{STRATEGY_CHANGE, STRATEGY_ANNOUNCE},
-                    new String[]{SUBSCRIBE_ON_ADDRESS, TOKEN_MINT})
+                    new String[]{INFO, PS_NOTIFICATIONS},
+                    new String[]{FARM_NOTIFICATIONS, TVL_NOTIFICATIONS},
+                    new String[]{STRATEGY_NOTIFICATIONS, TOKEN_PRICE_SUBSCRIBE},
+                    new String[]{SUBSCRIBE_ON_ADDRESS, TOKEN_MINT}
+                    )
+
                 .resizeKeyboard(true)
                 .oneTimeKeyboard(true)
                 .selective(true);

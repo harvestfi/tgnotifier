@@ -4,11 +4,15 @@ import org.springframework.stereotype.Service;
 import pro.belbix.tgnotifier.Properties;
 import pro.belbix.tgnotifier.db.DbService;
 import pro.belbix.tgnotifier.db.entity.UserEntity;
+import pro.belbix.tgnotifier.db.entity.TokenWatchEntity;
 import pro.belbix.tgnotifier.models.DtoI;
 import pro.belbix.tgnotifier.models.HardWorkDTO;
 import pro.belbix.tgnotifier.models.HarvestDTO;
 import pro.belbix.tgnotifier.models.UniswapDTO;
+import pro.belbix.tgnotifier.models.PriceDTO;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 @Service
 public class DefaultMessageHandler {
 
@@ -28,6 +32,8 @@ public class DefaultMessageHandler {
             checkHarvestDto(user, (HarvestDTO) dto, result);
         } else if (dto instanceof HardWorkDTO) {
             checkHardWorkDto(user, (HardWorkDTO) dto, result);
+        } else if (dto instanceof PriceDTO) {
+            checkPriceDto(user, (PriceDTO) dto, result);
         }
         return result;
     }
@@ -76,6 +82,29 @@ public class DefaultMessageHandler {
         }
     }
 
+
+    //debug why notification is not being sent
+    private void checkPriceDto(UserEntity user, PriceDTO dto, CheckResult checkResult) {
+
+        for (TokenWatchEntity token : user.getTokenWatchList()) { 
+
+            if (token.getTokenName().equals(dto.getToken())){
+                if (token.getLastPrice() == null) {
+                    token.setLastPrice(dto.getPrice());
+                    dbService.save(token);
+                }
+                if (checkPricePercentChange(token.getLastPrice(), token.getPriceChange(), dto.getPrice(), dto,
+                    checkResult)) {
+                    token.setLastPrice(dto.getPrice());
+                    dbService.save(token);
+                }
+            }
+
+        }
+
+        return;
+    }
+
     private boolean checkPricePercentChange(Double userLastValue, Double userChange, Double dtoLastValue, DtoI dto,
                                             CheckResult checkResult) {
         if (userLastValue == null) {
@@ -85,6 +114,7 @@ public class DefaultMessageHandler {
             userChange != 0.0 &&
             dtoLastValue != null) {
             double changePercent = ((dtoLastValue - userLastValue) / dtoLastValue) * 100;
+
             if (Math.abs(changePercent) > userChange) {
                 if (properties.isShowDescriptions()) {
                     dto.setDescription("Trigger " + String.format("%.2f%% > %.2f%%", changePercent, userChange));
