@@ -55,7 +55,7 @@ public class DbService {
         String lastCommand = userEntity.getLastCommand();
 
         if (lastCommand == null) {
-            return new UserResponse("Please, use command before setup value", null, false);
+            return new UserResponse("Please, use command before setup value", null, true);
         }
 
         try {
