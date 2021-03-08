@@ -14,26 +14,26 @@ import pro.belbix.tgnotifier.models.UniswapDTO;
 @Component
 public class UniFrameHandler implements StompFrameHandler, FrameHandlerWithQueue {
 
-    private final BlockingQueue<DtoI> queue = new ArrayBlockingQueue<>(1000);
+  private final BlockingQueue<DtoI> queue = new ArrayBlockingQueue<>(1000);
 
-    @Override
-    public Type getPayloadType(StompHeaders headers) {
-        return UniswapDTO.class;
-    }
+  @Override
+  public Type getPayloadType(StompHeaders headers) {
+    return UniswapDTO.class;
+  }
 
-    @Override
-    public void handleFrame(StompHeaders headers, Object payload) {
-        try {
-            UniswapDTO dto = (UniswapDTO) payload;
-            log.info("Received uni " + dto.print());
-            queue.put(dto);
-        } catch (Exception e) {
-            log.info("Error with uni " + payload, e);
-        }
+  @Override
+  public void handleFrame(StompHeaders headers, Object payload) {
+    try {
+      UniswapDTO dto = (UniswapDTO) payload;
+      log.info("Received uni " + dto.print());
+      queue.put(dto);
+    } catch (Exception e) {
+      log.info("Error with uni " + payload, e);
     }
+  }
 
-    @Override
-    public BlockingQueue<DtoI> getQueue() {
-        return queue;
-    }
+  @Override
+  public BlockingQueue<DtoI> getQueue() {
+    return queue;
+  }
 }

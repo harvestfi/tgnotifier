@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class CheckResult {
 
-    private boolean success = false;
-    private String message = "Empty message";
+  private boolean success = false;
+  private String message = "Empty message";
 
 }

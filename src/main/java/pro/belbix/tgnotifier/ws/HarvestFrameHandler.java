@@ -14,32 +14,32 @@ import pro.belbix.tgnotifier.models.HarvestDTO;
 @Component
 public class HarvestFrameHandler implements StompFrameHandler, FrameHandlerWithQueue {
 
-    public static final String PRICE_STUB_TYPE = "price_stub";
-    private final BlockingQueue<DtoI> queue = new ArrayBlockingQueue<>(1000);
+  public static final String PRICE_STUB_TYPE = "price_stub";
+  private final BlockingQueue<DtoI> queue = new ArrayBlockingQueue<>(1000);
 
-    @Override
-    public Type getPayloadType(StompHeaders headers) {
-        return HarvestDTO.class;
-    }
+  @Override
+  public Type getPayloadType(StompHeaders headers) {
+    return HarvestDTO.class;
+  }
 
-    @Override
-    public void handleFrame(StompHeaders headers, Object payload) {
-        try {
-            HarvestDTO dto = (HarvestDTO) payload;
-            if (PRICE_STUB_TYPE.equals(dto.getMethodName())) {
-                log.info("Received stub price " + dto.getPrices());
-                return;
-            }
-            log.info("Received harvest " + dto.print());
-            queue.put(dto);
-        } catch (Exception e) {
-            log.info("Error with harvest " + payload, e);
-        }
+  @Override
+  public void handleFrame(StompHeaders headers, Object payload) {
+    try {
+      HarvestDTO dto = (HarvestDTO) payload;
+      if (PRICE_STUB_TYPE.equals(dto.getMethodName())) {
+        log.info("Received stub price " + dto.getPrices());
+        return;
+      }
+      log.info("Received harvest " + dto.print());
+      queue.put(dto);
+    } catch (Exception e) {
+      log.info("Error with harvest " + payload, e);
     }
+  }
 
-    @Override
-    public BlockingQueue<DtoI> getQueue() {
-        return queue;
-    }
+  @Override
+  public BlockingQueue<DtoI> getQueue() {
+    return queue;
+  }
 
 }

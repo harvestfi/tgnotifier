@@ -13,16 +13,16 @@ import pro.belbix.tgnotifier.Application;
 @ActiveProfiles("test")
 public class TelegramBotServiceTest {
 
-    @Autowired
-    private TelegramBotService telegramBotService;
+  @Autowired
+  private TelegramBotService telegramBotService;
 
-    @Test
-    public void startTestTelegram() throws InterruptedException {
-        telegramBotService.init();
+  @Test
+  public void startTestTelegram() throws InterruptedException {
+    telegramBotService.init();
 
-        telegramBotService.sendMessage(0, "test", null, false);
-        while (true) {
-            Thread.sleep(100);
-        }
+    telegramBotService.sendMessage(0, "test", null, false);
+    while (true) {
+      Thread.sleep(100);
     }
+  }
 }

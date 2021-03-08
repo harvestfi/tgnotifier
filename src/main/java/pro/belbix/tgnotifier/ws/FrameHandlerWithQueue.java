@@ -5,6 +5,6 @@ import pro.belbix.tgnotifier.models.DtoI;
 
 public interface FrameHandlerWithQueue {
 
-    BlockingQueue<DtoI> getQueue();
+  BlockingQueue<DtoI> getQueue();
 
 }

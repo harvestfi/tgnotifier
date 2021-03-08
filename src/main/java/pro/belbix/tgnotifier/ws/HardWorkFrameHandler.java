@@ -14,28 +14,28 @@ import pro.belbix.tgnotifier.models.HardWorkDTO;
 @Component
 public class HardWorkFrameHandler implements StompFrameHandler, FrameHandlerWithQueue {
 
-    private final BlockingQueue<DtoI> queue = new ArrayBlockingQueue<>(1000);
+  private final BlockingQueue<DtoI> queue = new ArrayBlockingQueue<>(1000);
 
-    @Override
-    public Type getPayloadType(StompHeaders headers) {
-        return HardWorkDTO.class;
-    }
+  @Override
+  public Type getPayloadType(StompHeaders headers) {
+    return HardWorkDTO.class;
+  }
 
-    @Override
-    public void handleFrame(StompHeaders headers, Object payload) {
-        try {
-            HardWorkDTO dto = (HardWorkDTO) payload;
-            log.info("Received hard work " + dto.print());
-            queue.put(dto);
-        } catch (Exception e) {
-            log.info("Error with hard work " + payload, e);
-        }
+  @Override
+  public void handleFrame(StompHeaders headers, Object payload) {
+    try {
+      HardWorkDTO dto = (HardWorkDTO) payload;
+      log.info("Received hard work " + dto.print());
+      queue.put(dto);
+    } catch (Exception e) {
+      log.info("Error with hard work " + payload, e);
     }
+  }
 
-    @Override
-    public BlockingQueue<DtoI> getQueue() {
-        return queue;
-    }
+  @Override
+  public BlockingQueue<DtoI> getQueue() {
+    return queue;
+  }
 
 
 }
