@@ -7,8 +7,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "tgnotifier")
 public class Properties {
 
-    private String telegramToken = "";
-    private String wsUrl = "";
-    private boolean showDescriptions = false;
+  private String telegramToken = "";
+  private String wsUrl = "";
+  private boolean showDescriptions = false;
 
 }

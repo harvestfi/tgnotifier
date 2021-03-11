@@ -14,17 +14,17 @@ import pro.belbix.tgnotifier.ws.WebSocketService;
 @ActiveProfiles("test")
 public class ApplicationTest {
 
-    @Autowired
-    private WebSocketService webSocketService;
-    @Autowired
-    private TelegramBotService telegramBotService;
+  @Autowired
+  private WebSocketService webSocketService;
+  @Autowired
+  private TelegramBotService telegramBotService;
 
-    @Test
-    public void main() throws InterruptedException {
-        webSocketService.start();
-        telegramBotService.init();
-        while (true) {
-            Thread.sleep(100);
-        }
+  @Test
+  public void main() throws InterruptedException {
+    webSocketService.start();
+    telegramBotService.init();
+    while (true) {
+      Thread.sleep(100);
     }
+  }
 }

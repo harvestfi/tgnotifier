@@ -13,14 +13,14 @@ import pro.belbix.tgnotifier.Application;
 @ActiveProfiles("test")
 public class WebSocketServiceTest {
 
-    @Autowired
-    private WebSocketService webSocketService;
+  @Autowired
+  private WebSocketService webSocketService;
 
-    @Test
-    public void startWsTest() throws InterruptedException {
-        webSocketService.start();
-        while (true) {
-            Thread.sleep(100);
-        }
+  @Test
+  public void startWsTest() throws InterruptedException {
+    webSocketService.start();
+    while (true) {
+      Thread.sleep(100);
     }
+  }
 }

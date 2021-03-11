@@ -16,70 +16,70 @@ import pro.belbix.tgnotifier.ws.UniFrameHandler;
 @Log4j2
 public class MessageRouter {
 
-    private final AtomicBoolean run = new AtomicBoolean(true);
+  private final AtomicBoolean run = new AtomicBoolean(true);
 
+  private final TelegramBotService telegramBotService;
+  private final UniFrameHandler uniFrameHandler;
+  private final HarvestFrameHandler harvestFrameHandler;
+  private final HardWorkFrameHandler hardWorkFrameHandler;
+  private final ImportantEventsFrameHandler importantEventsFrameHandler;
+  private final PriceEventsHandler priceEventsHandler;
+
+  public MessageRouter(TelegramBotService telegramBotService,
+      UniFrameHandler uniFrameHandler,
+      HarvestFrameHandler harvestFrameHandler,
+      HardWorkFrameHandler hardWorkFrameHandler,
+      ImportantEventsFrameHandler importantEventsFrameHandler,
+      PriceEventsHandler priceEventsHandler) {
+    this.telegramBotService = telegramBotService;
+    this.uniFrameHandler = uniFrameHandler;
+    this.harvestFrameHandler = harvestFrameHandler;
+    this.hardWorkFrameHandler = hardWorkFrameHandler;
+    this.importantEventsFrameHandler = importantEventsFrameHandler;
+    this.priceEventsHandler = priceEventsHandler;
+  }
+
+  @PostConstruct
+  public void init() {
+    routeFrom(uniFrameHandler);
+    routeFrom(harvestFrameHandler);
+    routeFrom(hardWorkFrameHandler);
+    routeFrom(importantEventsFrameHandler);
+    routeFrom(priceEventsHandler);
+    log.info("Telegram Message Router initialized");
+  }
+
+  private void routeFrom(FrameHandlerWithQueue handler) {
+    Thread thread = new Thread(new HandlerRouter(run, handler, telegramBotService));
+    thread.setName("Router" + handler.getClass().getSimpleName());
+    thread.start();
+  }
+
+  public static class HandlerRouter implements Runnable {
+
+    private final AtomicBoolean run;
+    private final FrameHandlerWithQueue handler;
     private final TelegramBotService telegramBotService;
-    private final UniFrameHandler uniFrameHandler;
-    private final HarvestFrameHandler harvestFrameHandler;
-    private final HardWorkFrameHandler hardWorkFrameHandler;
-    private final ImportantEventsFrameHandler importantEventsFrameHandler;
-    private final PriceEventsHandler priceEventsHandler;
 
-    public MessageRouter(TelegramBotService telegramBotService,
-                         UniFrameHandler uniFrameHandler,
-                         HarvestFrameHandler harvestFrameHandler,
-                         HardWorkFrameHandler hardWorkFrameHandler,
-                         ImportantEventsFrameHandler importantEventsFrameHandler,
-                         PriceEventsHandler priceEventsHandler) {
-        this.telegramBotService = telegramBotService;
-        this.uniFrameHandler = uniFrameHandler;
-        this.harvestFrameHandler = harvestFrameHandler;
-        this.hardWorkFrameHandler = hardWorkFrameHandler;
-        this.importantEventsFrameHandler = importantEventsFrameHandler;
-        this.priceEventsHandler = priceEventsHandler;
+    public HandlerRouter(AtomicBoolean run, FrameHandlerWithQueue handler,
+        TelegramBotService telegramBotService) {
+      this.run = run;
+      this.handler = handler;
+      this.telegramBotService = telegramBotService;
     }
 
-    @PostConstruct
-    public void init() {
-        routeFrom(uniFrameHandler);
-        routeFrom(harvestFrameHandler);
-        routeFrom(hardWorkFrameHandler);
-        routeFrom(importantEventsFrameHandler);
-        routeFrom(priceEventsHandler);
-        log.info("Telegram Message Router initialized");
-    }
-
-    private void routeFrom(FrameHandlerWithQueue handler) {
-        Thread thread = new Thread(new HandlerRouter(run, handler, telegramBotService));
-        thread.setName("Router" + handler.getClass().getSimpleName());
-        thread.start();
-    }
-
-    public static class HandlerRouter implements Runnable {
-
-        private final AtomicBoolean run;
-        private final FrameHandlerWithQueue handler;
-        private final TelegramBotService telegramBotService;
-
-        public HandlerRouter(AtomicBoolean run, FrameHandlerWithQueue handler,
-                             TelegramBotService telegramBotService) {
-            this.run = run;
-            this.handler = handler;
-            this.telegramBotService = telegramBotService;
+    @Override
+    public void run() {
+      while (run.get()) {
+        try {
+          DtoI dto = handler.getQueue().take();
+          telegramBotService.sendDto(dto);
+        } catch (Exception e) {
+          log.error("Error routing", e);
         }
-
-        @Override
-        public void run() {
-            while (run.get()) {
-                try {
-                    DtoI dto = handler.getQueue().take();
-                    telegramBotService.sendDto(dto);
-                } catch (Exception e) {
-                    log.error("Error routing", e);
-                }
-            }
-        }
+      }
     }
+  }
 
 
 }

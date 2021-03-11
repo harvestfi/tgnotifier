@@ -14,28 +14,28 @@ import pro.belbix.tgnotifier.models.PriceDTO;
 @Component
 public class PriceEventsHandler implements StompFrameHandler, FrameHandlerWithQueue {
 
-    private final BlockingQueue<DtoI> queue = new ArrayBlockingQueue<>(1000);
+  private final BlockingQueue<DtoI> queue = new ArrayBlockingQueue<>(1000);
 
-    @Override
-    public Type getPayloadType(StompHeaders headers) {
-        return PriceDTO.class;
-    }
+  @Override
+  public Type getPayloadType(StompHeaders headers) {
+    return PriceDTO.class;
+  }
 
-    @Override
-    public void handleFrame(StompHeaders headers, Object payload) {
-        try {
-            PriceDTO dto = (PriceDTO) payload;
-            log.info("Received price dto " + dto.print());
-            queue.put(dto);
-        } catch (Exception e) {
-            log.info("Error with price dto " + payload, e);
-        }
+  @Override
+  public void handleFrame(StompHeaders headers, Object payload) {
+    try {
+      PriceDTO dto = (PriceDTO) payload;
+      log.info("Received price dto " + dto.print());
+      queue.put(dto);
+    } catch (Exception e) {
+      log.info("Error with price dto " + payload, e);
     }
+  }
 
-    @Override
-    public BlockingQueue<DtoI> getQueue() {
-        return queue;
-    }
+  @Override
+  public BlockingQueue<DtoI> getQueue() {
+    return queue;
+  }
 
 
 }

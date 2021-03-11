@@ -14,28 +14,28 @@ import pro.belbix.tgnotifier.models.ImportantEventsDTO;
 @Component
 public class ImportantEventsFrameHandler implements StompFrameHandler, FrameHandlerWithQueue {
 
-    private final BlockingQueue<DtoI> queue = new ArrayBlockingQueue<>(1000);
+  private final BlockingQueue<DtoI> queue = new ArrayBlockingQueue<>(1000);
 
-    @Override
-    public Type getPayloadType(StompHeaders headers) {
-        return ImportantEventsDTO.class;
-    }
+  @Override
+  public Type getPayloadType(StompHeaders headers) {
+    return ImportantEventsDTO.class;
+  }
 
-    @Override
-    public void handleFrame(StompHeaders headers, Object payload) {
-        try {
-            ImportantEventsDTO dto = (ImportantEventsDTO) payload;
-            log.info("Received important event " + dto.print());
-            queue.put(dto);
-        } catch (Exception e) {
-            log.info("Error with important event " + payload, e);
-        }
+  @Override
+  public void handleFrame(StompHeaders headers, Object payload) {
+    try {
+      ImportantEventsDTO dto = (ImportantEventsDTO) payload;
+      log.info("Received important event " + dto.print());
+      queue.put(dto);
+    } catch (Exception e) {
+      log.info("Error with important event " + payload, e);
     }
+  }
 
-    @Override
-    public BlockingQueue<DtoI> getQueue() {
-        return queue;
-    }
+  @Override
+  public BlockingQueue<DtoI> getQueue() {
+    return queue;
+  }
 
 
 }
