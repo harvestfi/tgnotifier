@@ -1,5 +1,7 @@
 package pro.belbix.tgnotifier.tg;
 
+import static pro.belbix.tgnotifier.properties.ConstantsTest.REPEAT_TIME;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +23,8 @@ public class TelegramBotServiceTest {
     telegramBotService.init();
 
     telegramBotService.sendMessage(0, "test", null, false);
-    while (true) {
+
+    for (int i = 0; i < REPEAT_TIME; i++) {
       Thread.sleep(100);
     }
   }
