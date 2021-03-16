@@ -9,6 +9,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import pro.belbix.tgnotifier.tg.TelegramBotService;
 import pro.belbix.tgnotifier.ws.WebSocketService;
 
+import static pro.belbix.tgnotifier.properties.ConstantsTest.REPEAT_TIME;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
 @ActiveProfiles("test")
@@ -23,7 +25,8 @@ public class ApplicationTest {
     public void main() throws InterruptedException {
         webSocketService.start();
         telegramBotService.init();
-        while (true) {
+
+        for (int i = 0; i < REPEAT_TIME; i++) {
             Thread.sleep(100);
         }
     }

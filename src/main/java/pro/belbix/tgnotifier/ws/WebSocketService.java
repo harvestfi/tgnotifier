@@ -15,47 +15,47 @@ import pro.belbix.tgnotifier.Properties;
 @Service
 public class WebSocketService {
 
-    private final Properties properties;
-    private final UniFrameHandler uniFrameHandler;
-    private final HarvestFrameHandler harvestFrameHandler;
-    private final HardWorkFrameHandler hardWorkFrameHandler;
-    private final ImportantEventsFrameHandler importantEventsFrameHandler;
-    private final PriceEventsHandler priceEventsHandler;
+  private final Properties properties;
+  private final UniFrameHandler uniFrameHandler;
+  private final HarvestFrameHandler harvestFrameHandler;
+  private final HardWorkFrameHandler hardWorkFrameHandler;
+  private final ImportantEventsFrameHandler importantEventsFrameHandler;
+  private final PriceEventsHandler priceEventsHandler;
 
-    private WebSocketStompClient stompClient;
+  private WebSocketStompClient stompClient;
 
-    public WebSocketService(Properties properties, UniFrameHandler uniFrameHandler,
-                            HarvestFrameHandler harvestFrameHandler,
-                            HardWorkFrameHandler hardWorkFrameHandler,
-                            ImportantEventsFrameHandler importantEventsFrameHandler,
-                            PriceEventsHandler priceEventsHandler) {
-        this.properties = properties;
-        this.uniFrameHandler = uniFrameHandler;
-        this.harvestFrameHandler = harvestFrameHandler;
-        this.hardWorkFrameHandler = hardWorkFrameHandler;
-        this.importantEventsFrameHandler = importantEventsFrameHandler;
-        this.priceEventsHandler = priceEventsHandler;
-    }
+  public WebSocketService(Properties properties, UniFrameHandler uniFrameHandler,
+      HarvestFrameHandler harvestFrameHandler,
+      HardWorkFrameHandler hardWorkFrameHandler,
+      ImportantEventsFrameHandler importantEventsFrameHandler,
+      PriceEventsHandler priceEventsHandler) {
+    this.properties = properties;
+    this.uniFrameHandler = uniFrameHandler;
+    this.harvestFrameHandler = harvestFrameHandler;
+    this.hardWorkFrameHandler = hardWorkFrameHandler;
+    this.importantEventsFrameHandler = importantEventsFrameHandler;
+    this.priceEventsHandler = priceEventsHandler;
+  }
 
-    public void start() {
-        List<Transport> transports = new ArrayList<>();
-        transports.add(new WebSocketTransport(new StandardWebSocketClient()));
-        SockJsClient sockJsClient = new SockJsClient(transports);
+  public void start() {
+    List<Transport> transports = new ArrayList<>();
+    transports.add(new WebSocketTransport(new StandardWebSocketClient()));
+    SockJsClient sockJsClient = new SockJsClient(transports);
 
-        SessionHandler sessionHandler = new SessionHandler(this, uniFrameHandler,
-            harvestFrameHandler,
-            hardWorkFrameHandler,
-            importantEventsFrameHandler,
-            priceEventsHandler);
+    SessionHandler sessionHandler = new SessionHandler(this, uniFrameHandler,
+        harvestFrameHandler,
+        hardWorkFrameHandler,
+        importantEventsFrameHandler,
+        priceEventsHandler);
 
-        stompClient = new WebSocketStompClient(sockJsClient);
-        stompClient.setMessageConverter(new MappingJackson2MessageConverter());
-        stompClient.setInboundMessageSizeLimit(1024 * 1024);
-        stompClient.connect(properties.getWsUrl(), new WebSocketHttpHeaders(), sessionHandler);
-    }
+    stompClient = new WebSocketStompClient(sockJsClient);
+    stompClient.setMessageConverter(new MappingJackson2MessageConverter());
+    stompClient.setInboundMessageSizeLimit(1024 * 1024);
+    stompClient.connect(properties.getWsUrl(), new WebSocketHttpHeaders(), sessionHandler);
+  }
 
-    public void stop() {
-        stompClient.stop();
-    }
+  public void stop() {
+    stompClient.stop();
+  }
 
 }

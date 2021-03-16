@@ -17,79 +17,79 @@ import pro.belbix.tgnotifier.tg.UserResponse;
 @Log4j2
 public class DbService {
 
-    private final UserRepository userRepository;
-    private final TokenWatchRepository tokenWatchRepository;
+  private final UserRepository userRepository;
+  private final TokenWatchRepository tokenWatchRepository;
 
-    public DbService(UserRepository userRepository, TokenWatchRepository tokenWatchRepository) {
-        this.userRepository = userRepository;
-        this.tokenWatchRepository = tokenWatchRepository;
+  public DbService(UserRepository userRepository, TokenWatchRepository tokenWatchRepository) {
+    this.userRepository = userRepository;
+    this.tokenWatchRepository = tokenWatchRepository;
+  }
+
+  public void save(UserEntity userEntity) {
+    userRepository.save(userEntity);
+  }
+
+  public void save(TokenWatchEntity tokenWatchEntity) {
+    tokenWatchRepository.save(tokenWatchEntity);
+  }
+
+  public void saveNewUser(UserEntity userEntity) {
+    userRepository.save(userEntity);
+  }
+
+  public boolean isKnownChatId(long id) {
+    return userRepository.existsById(id);
+  }
+
+  public List<UserEntity> findAllChats() {
+    return userRepository.findAll();
+  }
+
+  public UserResponse updateValueForLastCommand(long id, String text) {
+
+    UserEntity userEntity = userRepository.findById(id).orElse(null);
+    if (userEntity == null) {
+      return new UserResponse("User not found", null, false);
     }
 
-    public void save(UserEntity userEntity) {
-        userRepository.save(userEntity);
+    String lastCommand = userEntity.getLastCommand();
+
+    if (lastCommand == null) {
+      return new UserResponse("Please, use command before setup value", null, true);
     }
 
-    public void save(TokenWatchEntity tokenWatchEntity) {
-        tokenWatchRepository.save(tokenWatchEntity);
+    try {
+      if (!fillFieldForCommand(lastCommand, userEntity, text)) {
+        return new UserResponse("Command not found", null, false);
+      }
+    } catch (IllegalStateException e) {
+      return new UserResponse(e.getMessage(), null, false);
     }
 
-    public void saveNewUser(UserEntity userEntity) {
-        userRepository.save(userEntity);
+    String nextCommandID = nextCommand(lastCommand);
+
+    log.info("next command: " + nextCommandID);
+
+    userEntity.setLastCommand(nextCommandID);
+    userRepository.save(userEntity);
+
+    if (nextCommandID != null) {
+      return responseForCommand(nextCommandID);
+    } else {
+      return new UserResponse("Value successfully updated to " + text, null, false);
     }
+  }
 
-    public boolean isKnownChatId(long id) {
-        return userRepository.existsById(id);
-    }
+  public void updateLastCommand(long id, String command) {
+    userRepository.findById(id)
+        .ifPresent(u -> {
+          u.setLastCommand(command);
+          userRepository.save(u);
+        });
+  }
 
-    public List<UserEntity> findAllChats() {
-        return userRepository.findAll();
-    }
-
-    public UserResponse updateValueForLastCommand(long id, String text) {
-
-        UserEntity userEntity = userRepository.findById(id).orElse(null);
-        if (userEntity == null) {
-            return new UserResponse("User not found", null, false);
-        }
-
-        String lastCommand = userEntity.getLastCommand();
-
-        if (lastCommand == null) {
-            return new UserResponse("Please, use command before setup value", null, true);
-        }
-
-        try {
-            if (!fillFieldForCommand(lastCommand, userEntity, text)) {
-                return new UserResponse("Command not found", null, false);
-            }
-        } catch (IllegalStateException e) {
-            return new UserResponse(e.getMessage(), null, false);
-        }
-
-        String nextCommandID = nextCommand(lastCommand);
-
-        log.info("next command: " + nextCommandID);
-
-        userEntity.setLastCommand(nextCommandID);
-        userRepository.save(userEntity);
-
-        if (nextCommandID != null) {
-            return responseForCommand(nextCommandID);
-        } else {
-            return new UserResponse("Value successfully updated to " + text, null, false);
-        }
-    }
-
-    public void updateLastCommand(long id, String command) {
-        userRepository.findById(id)
-            .ifPresent(u -> {
-                u.setLastCommand(command);
-                userRepository.save(u);
-            });
-    }
-
-    public UserEntity findById(long chatId) {
-        return userRepository.findById(chatId)
-            .orElseThrow(() -> new IllegalStateException("Not found user with id " + chatId));
-    }
+  public UserEntity findById(long chatId) {
+    return userRepository.findById(chatId)
+        .orElseThrow(() -> new IllegalStateException("Not found user with id " + chatId));
+  }
 }

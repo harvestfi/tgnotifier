@@ -1,5 +1,7 @@
 package pro.belbix.tgnotifier.ws;
 
+import static pro.belbix.tgnotifier.properties.ConstantsTest.REPEAT_TIME;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +15,14 @@ import pro.belbix.tgnotifier.Application;
 @ActiveProfiles("test")
 public class WebSocketServiceTest {
 
-    @Autowired
-    private WebSocketService webSocketService;
+  @Autowired
+  private WebSocketService webSocketService;
 
-    @Test
-    public void startWsTest() throws InterruptedException {
-        webSocketService.start();
-        while (true) {
-            Thread.sleep(100);
-        }
+  @Test
+  public void startWsTest() throws InterruptedException {
+    webSocketService.start();
+    for (int i = 0; i < REPEAT_TIME; i++) {
+      Thread.sleep(100);
     }
+  }
 }

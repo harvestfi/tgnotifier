@@ -1,5 +1,7 @@
 package pro.belbix.tgnotifier.tg;
 
+import static pro.belbix.tgnotifier.properties.ConstantsTest.REPEAT_TIME;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,16 +15,17 @@ import pro.belbix.tgnotifier.Application;
 @ActiveProfiles("test")
 public class TelegramBotServiceTest {
 
-    @Autowired
-    private TelegramBotService telegramBotService;
+  @Autowired
+  private TelegramBotService telegramBotService;
 
-    @Test
-    public void startTestTelegram() throws InterruptedException {
-        telegramBotService.init();
+  @Test
+  public void startTestTelegram() throws InterruptedException {
+    telegramBotService.init();
 
-        telegramBotService.sendMessage(0, "test", null, false);
-        while (true) {
-            Thread.sleep(100);
-        }
+    telegramBotService.sendMessage(0, "test", null, false);
+
+    for (int i = 0; i < REPEAT_TIME; i++) {
+      Thread.sleep(100);
     }
+  }
 }

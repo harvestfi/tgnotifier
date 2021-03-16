@@ -18,25 +18,25 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(exclude = {"user"})
 public class TokenWatchEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private long id;
 
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user", referencedColumnName = "id", nullable = false, updatable = false)
-    private UserEntity user;
+  @JsonIgnore
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user", referencedColumnName = "id", nullable = false, updatable = false)
+  private UserEntity user;
 
-    private String tokenName;
-    private Double lastPrice;
-    private Double priceChange;
+  private String tokenName;
+  private Double lastPrice;
+  private Double priceChange;
 
-    public String print() {
-        return
-            "-----------\n" +
-                "Token Name: " + tokenName + "\n" +
-                "Subscribed Token Change: " + priceChange + "\n" +
-                "Last Price: " + String.format("%.1f", lastPrice) + "\n" +
-                "";
-    }
+  public String print() {
+    return
+        "-----------\n" +
+            "Token Name: " + tokenName + "\n" +
+            "Subscribed Token Change: " + priceChange + "\n" +
+            "Last Price: " + String.format("%.1f", lastPrice) + "\n" +
+            "";
+  }
 }

@@ -2,10 +2,10 @@ package pro.belbix.tgnotifier.models;
 
 public interface DtoI {
 
-    String print();
+  String print();
 
-    String printValueChanged(double percent);
+  String printValueChanged(double percent);
 
-    void setDescription(String desc);
+  void setDescription(String desc);
 
 }

@@ -14,11 +14,25 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:8.0.17
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_USER: harvest
+          MYSQL_PASSWORD: harvest
+          MYSQL_DATABASE: harvest
+        ports:
+          - 3306:3306
+        options:
+          --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK 1.8
-      uses: actions/setup-java@v1
-      with:
-        java-version: 1.8
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      - uses: actions/checkout@v2
+      - name: Set up JDK 1.11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.11
+      - name: Build with Maven
+        run: mvn -Dtgnotifier.telegramToken="${{secrets.TELEGRAM_TOKEN}}" -Dtgnotifier.wsUrl="https://ethparser-staging.herokuapp.com/stomp" -Dspring.datasource.url=jdbc:mysql://localhost:3306/harvest -Dspring.datasource.username=harvest -Dspring.datasource.password=harvest -B package -ff -T 1 --file pom.xml
