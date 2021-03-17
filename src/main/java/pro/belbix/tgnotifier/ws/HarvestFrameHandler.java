@@ -1,5 +1,7 @@
 package pro.belbix.tgnotifier.ws;
 
+import static pro.belbix.tgnotifier.models.HarvestDTO.PRICE_STUB_METHOD;
+
 import java.lang.reflect.Type;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -14,7 +16,6 @@ import pro.belbix.tgnotifier.models.HarvestDTO;
 @Component
 public class HarvestFrameHandler implements StompFrameHandler, FrameHandlerWithQueue {
 
-  public static final String PRICE_STUB_TYPE = "price_stub";
   private final BlockingQueue<DtoI> queue = new ArrayBlockingQueue<>(1000);
 
   @Override
@@ -26,7 +27,7 @@ public class HarvestFrameHandler implements StompFrameHandler, FrameHandlerWithQ
   public void handleFrame(StompHeaders headers, Object payload) {
     try {
       HarvestDTO dto = (HarvestDTO) payload;
-      if (PRICE_STUB_TYPE.equals(dto.getMethodName())) {
+      if (PRICE_STUB_METHOD.equals(dto.getMethodName())) {
         log.info("Received stub price " + dto.getPrices());
         return;
       }
