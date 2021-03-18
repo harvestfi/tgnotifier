@@ -1,6 +1,7 @@
 package pro.belbix.tgnotifier.models;
 
-import static pro.belbix.tgnotifier.models.PrintConstants.percentChangeType;
+import static pro.belbix.tgnotifier.utils.Constants.SAD_SMILE;
+import static pro.belbix.tgnotifier.utils.NumberHelper.percentChangeType;
 
 import com.vdurmont.emoji.EmojiParser;
 import java.math.BigInteger;
@@ -46,7 +47,7 @@ public class UniswapDTO implements DtoI {
 
   private String type() {
     if (type == null) {
-      return "?\uD83D\uDE29?";
+      return SAD_SMILE;
     }
     switch (type) {
       case "BUY":
@@ -58,7 +59,7 @@ public class UniswapDTO implements DtoI {
       case "REM":
         return "\uD83D\uDD2A Remove liquidity";
       default:
-        return "?\uD83D\uDE29?";
+        return SAD_SMILE;
     }
   }
 
@@ -68,7 +69,7 @@ public class UniswapDTO implements DtoI {
 
   private String separateCoins() {
     if (type == null) {
-      return "?\uD83D\uDE29?";
+      return SAD_SMILE;
     }
     switch (type) {
       case "BUY":
@@ -78,7 +79,7 @@ public class UniswapDTO implements DtoI {
       case "REM":
         return "and";
       default:
-        return "?\uD83D\uDE29?";
+        return SAD_SMILE;
     }
   }
 
