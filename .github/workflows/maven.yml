@@ -48,7 +48,7 @@ jobs:
 
       - name: Commit the badge (if it changed)
         run: |
-          if [ -n "$(git status --porcelain)" ]; then
+          if [[ `git status --porcelain` ]]; then
             git config --global user.name 'codecoverage'
             git config --global user.email 'codecoverage@users.noreply.github.com'
             git add -A
