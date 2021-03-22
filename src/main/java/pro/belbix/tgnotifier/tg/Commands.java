@@ -74,7 +74,7 @@ public class Commands {
   public final static String HELP_TEXT = "Select an entry from the menu below.";
   public final static String UNKNOWN_COMMAND = "Incorrect or unknown command.";
 
-  public final static String[] COMMANDS = new String[]{START, FARM_NOTIFICATIONS,
+  public final static String[] COMMANDS = new String[]{START, INFO, FARM_NOTIFICATIONS,
       TVL_NOTIFICATIONS,
       STRATEGY_NOTIFICATIONS, PS_NOTIFICATIONS, FARM_CHANGE, FARM_MIN, TVL_CHANGE, TVL_MIN,
       PS_APR_CHANGE,
@@ -89,6 +89,8 @@ public class Commands {
     switch (command) {
       case START:
         return new UserResponse(WELCOME_MESSAGE, null, true);
+      case INFO:
+        return new UserResponse(INFO, null,true);
       case FARM_NOTIFICATIONS:
         InlineButton[] buttonsFarmNotifications = {
             new InlineButton(FARM_CHANGE, FARM_CHANGE),
