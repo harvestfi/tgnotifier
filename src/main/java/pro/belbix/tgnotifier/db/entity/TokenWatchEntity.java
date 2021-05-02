@@ -24,7 +24,7 @@ public class TokenWatchEntity {
 
   @JsonIgnore
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user", referencedColumnName = "id", nullable = false, updatable = false)
+  @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, updatable = false)
   private UserEntity user;
 
   private String tokenName;
