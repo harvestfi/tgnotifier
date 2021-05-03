@@ -1,10 +1,13 @@
 package pro.belbix.tgnotifier.tg;
 
+import static pro.belbix.tgnotifier.utils.Constants.*;
+
 import org.springframework.stereotype.Service;
 import pro.belbix.tgnotifier.Properties;
 import pro.belbix.tgnotifier.db.entity.UserEntity;
 import pro.belbix.tgnotifier.models.DtoI;
 import pro.belbix.tgnotifier.models.ImportantEventsDTO;
+import pro.belbix.tgnotifier.tg.model.CheckResult;
 
 @Service
 public class ImportantEventsHandler {
@@ -21,16 +24,19 @@ public class ImportantEventsHandler {
       ImportantEventsDTO eventDto = (ImportantEventsDTO) dto;
       eventDto.updateInfo();
 
-      if ("StrategyChanged".equals(eventDto.getEvent())) {
-        checkStrategyChangedDto(user, eventDto, result);
-      } else if ("StrategyAnnounced".equals(eventDto.getEvent())) {
-        checkStrategyAnnouncedDto(user, eventDto, result);
-      } else if ("TokenMinted".equals(eventDto.getEvent())) {
-        checkTokenMintedDto(user, eventDto, result);
-      } else {
-        return null;
+      switch (eventDto.getEvent()) {
+        case STRATEGY_CHANGED:
+          checkStrategyChangedDto(user, eventDto, result);
+          return result;
+        case STRATEGY_ANNOUNCED:
+          checkStrategyAnnouncedDto(user, eventDto, result);
+          return result;
+        case TOKEN_MINTED:
+          checkTokenMintedDto(user, eventDto, result);
+          return result;
+        default:
+          return null;
       }
-      return result;
     } else {
       return null;
     }

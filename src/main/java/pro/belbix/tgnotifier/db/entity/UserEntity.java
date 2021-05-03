@@ -65,6 +65,10 @@ public class UserEntity {
 
   public String print() {
 
+    if (tokenWatch==null){
+      return "no active subscriptions";
+    }
+
     String subscribedTokens = "";
 
     for (TokenWatchEntity token : tokenWatch) {

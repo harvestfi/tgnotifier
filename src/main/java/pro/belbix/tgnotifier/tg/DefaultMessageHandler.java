@@ -11,6 +11,7 @@ import pro.belbix.tgnotifier.models.HardWorkDTO;
 import pro.belbix.tgnotifier.models.HarvestDTO;
 import pro.belbix.tgnotifier.models.PriceDTO;
 import pro.belbix.tgnotifier.models.UniswapDTO;
+import pro.belbix.tgnotifier.tg.model.CheckResult;
 
 @Log4j2
 @Service

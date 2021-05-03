@@ -11,7 +11,7 @@ import pro.belbix.tgnotifier.db.entity.TokenWatchEntity;
 import pro.belbix.tgnotifier.db.entity.UserEntity;
 import pro.belbix.tgnotifier.db.repositories.TokenWatchRepository;
 import pro.belbix.tgnotifier.db.repositories.UserRepository;
-import pro.belbix.tgnotifier.tg.UserResponse;
+import pro.belbix.tgnotifier.tg.model.UserResponse;
 
 @Service
 @Log4j2

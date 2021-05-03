@@ -1,11 +1,13 @@
 package pro.belbix.tgnotifier.tg;
 
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import pro.belbix.tgnotifier.db.entity.UserEntity;
 import pro.belbix.tgnotifier.models.DtoI;
 import pro.belbix.tgnotifier.models.HarvestDTO;
 import pro.belbix.tgnotifier.models.UniswapDTO;
 
+@Service
 public class AddressesMessageHandler {
 
   public String check(UserEntity user, DtoI dto) {

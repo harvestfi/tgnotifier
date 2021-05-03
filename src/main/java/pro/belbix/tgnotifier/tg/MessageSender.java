@@ -1,14 +1,7 @@
 package pro.belbix.tgnotifier.tg;
 
 import static com.pengrad.telegrambot.model.request.ParseMode.HTML;
-import static pro.belbix.tgnotifier.tg.Commands.FARM_NOTIFICATIONS;
-import static pro.belbix.tgnotifier.tg.Commands.INFO;
-import static pro.belbix.tgnotifier.tg.Commands.PS_NOTIFICATIONS;
-import static pro.belbix.tgnotifier.tg.Commands.STRATEGY_NOTIFICATIONS;
-import static pro.belbix.tgnotifier.tg.Commands.SUBSCRIBE_ON_ADDRESS;
-import static pro.belbix.tgnotifier.tg.Commands.TOKEN_MINT;
-import static pro.belbix.tgnotifier.tg.Commands.TOKEN_PRICE_SUBSCRIBE;
-import static pro.belbix.tgnotifier.tg.Commands.TVL_NOTIFICATIONS;
+import static pro.belbix.tgnotifier.utils.ConstantsCommands.*;
 
 import com.pengrad.telegrambot.Callback;
 import com.pengrad.telegrambot.TelegramBot;
@@ -29,6 +22,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.log4j.Log4j2;
+import pro.belbix.tgnotifier.tg.model.InlineButton;
 
 @Log4j2
 public class MessageSender {

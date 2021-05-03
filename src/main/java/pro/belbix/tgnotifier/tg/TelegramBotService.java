@@ -1,11 +1,8 @@
 package pro.belbix.tgnotifier.tg;
 
 import static com.pengrad.telegrambot.UpdatesListener.CONFIRMED_UPDATES_ALL;
-import static pro.belbix.tgnotifier.tg.Commands.COMMANDS;
-import static pro.belbix.tgnotifier.tg.Commands.INFO;
-import static pro.belbix.tgnotifier.tg.Commands.UNKNOWN_COMMAND;
-import static pro.belbix.tgnotifier.tg.Commands.WELCOME_MESSAGE;
 import static pro.belbix.tgnotifier.tg.Commands.responseForCommand;
+import static pro.belbix.tgnotifier.utils.ConstantsCommands.*;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
@@ -17,6 +14,10 @@ import pro.belbix.tgnotifier.Properties;
 import pro.belbix.tgnotifier.db.DbService;
 import pro.belbix.tgnotifier.db.entity.UserEntity;
 import pro.belbix.tgnotifier.models.DtoI;
+import pro.belbix.tgnotifier.tg.model.CheckResult;
+import pro.belbix.tgnotifier.tg.model.InlineButton;
+import pro.belbix.tgnotifier.tg.model.UserInput;
+import pro.belbix.tgnotifier.tg.model.UserResponse;
 
 @Log4j2
 @Service
@@ -25,31 +26,34 @@ public class TelegramBotService {
   private final DbService dbService;
   private final Properties properties;
   private final DefaultMessageHandler defaultMessageHandler;
-  private final AddressesMessageHandler addressesMessageHandler = new AddressesMessageHandler();
+  private final AddressesMessageHandler addressesMessageHandler;
   private final ImportantEventsHandler importantEventsHandler;
-  private MessageSender messageSender;
+  public MessageSender messageSender;
+  public TelegramBot bot;
 
   public TelegramBotService(DbService dbService, Properties properties,
       DefaultMessageHandler defaultMessageHandler,
+      AddressesMessageHandler addressesMessageHandler,
       ImportantEventsHandler importantEventsHandler) {
     this.properties = properties;
     this.dbService = dbService;
     this.defaultMessageHandler = defaultMessageHandler;
+    this.addressesMessageHandler = addressesMessageHandler;
     this.importantEventsHandler = importantEventsHandler;
   }
 
   public void init() {
-    TelegramBot bot = new TelegramBot(properties.getTelegramToken());
+    bot = new TelegramBot(properties.getTelegramToken());
     bot.setUpdatesListener(this::updatesListener);
     messageSender = new MessageSender(bot);
     log.info("Telegram Bot started");
   }
 
-  private int updatesListener(List<Update> updates) {
-    log.info("Get updates " + updates.size());
+  public int updatesListener(List<Update> updates) {
     try {
-      for (Update u : updates) {
-        UserInput input = getUserInput(u);
+      log.info("Get updates " + updates.size());
+      for (Update update : updates) {
+        UserInput input = getUserInput(update);
 
         if (input == null) {
           continue;
@@ -100,7 +104,7 @@ public class TelegramBotService {
     long chatId = input.getChatId();
     log.info("Received message from user " + text);
     try {
-      if (Arrays.asList(COMMANDS).contains(text)) {
+      if (knownCommand(text)) {
         handleCommand(input);
       } else {
         handleValue(input);
@@ -111,7 +115,11 @@ public class TelegramBotService {
     }
   }
 
-  private void handleCommand(UserInput input) {
+  public boolean knownCommand(String command) {
+    return Arrays.asList(COMMANDS).contains(command);
+  }
+
+  public void handleCommand(UserInput input) {
     String text = input.getText();
     long chatId = input.getChatId();
     if (text.startsWith(INFO)) {
@@ -146,7 +154,7 @@ public class TelegramBotService {
     for (UserEntity user : dbService.findAllChats()) {
       try {
         CheckResult checkResult = defaultMessageHandler.checkAndUpdate(user, dto);
-        if (checkResult.isSuccess()) {
+        if (checkResult != null && checkResult.isSuccess()) {
           sendMessage(user.getId(), checkResult.getMessage(), null, true);
         }
         String ownerMsg = addressesMessageHandler.check(user, dto);
