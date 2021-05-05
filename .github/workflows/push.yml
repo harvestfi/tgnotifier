@@ -13,17 +13,16 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      mysql:
-        image: mysql:8.0.17
+      postgres:
+        image: postgres:12
         env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_USER: harvest
-          MYSQL_PASSWORD: harvest
-          MYSQL_DATABASE: harvest
+          POSTGRES_PASSWORD: harvest
+          POSTGRES_USER: harvest
+          POSTGRES_DB: harvest
         ports:
-          - 3306:3306
+          - 5432:5432
         options:
-          --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+          --health-cmd=pg_isready --health-interval=10s --health-timeout=5s --health-retries=5
 
 
     steps:
@@ -33,7 +32,7 @@ jobs:
         with:
           java-version: 1.11
       - name: Build with Maven
-        run: mvn -Dtgnotifier.telegramToken="${{secrets.TELEGRAM_TOKEN}}" -Dtgnotifier.wsUrl="https://ethparser-api.herokuapp.com/stomp" -Dspring.datasource.url=jdbc:mysql://localhost:3306/harvest -Dspring.datasource.username=harvest -Dspring.datasource.password=harvest -B package -ff -T 1 --file pom.xml
+        run: mvn -Dtgnotifier.telegramToken="${{secrets.TELEGRAM_TOKEN}}" -Dtgnotifier.wsUrl="https://ethparser-api.herokuapp.com/stomp" -Dspring.datasource.url=jdbc:postgresql://localhost:5432/harvest -Dspring.datasource.username=harvest -Dspring.datasource.password=harvest -B package -ff -T 1 --file pom.xml
 
       - name: Generate JaCoCo Badge
         id: jacoco
