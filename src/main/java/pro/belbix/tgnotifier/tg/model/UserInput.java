@@ -1,4 +1,4 @@
-package pro.belbix.tgnotifier.tg;
+package pro.belbix.tgnotifier.tg.model;
 
 import com.pengrad.telegrambot.model.CallbackQuery;
 import com.pengrad.telegrambot.model.Message;

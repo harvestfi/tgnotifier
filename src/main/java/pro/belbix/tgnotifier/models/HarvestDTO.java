@@ -1,5 +1,6 @@
 package pro.belbix.tgnotifier.models;
 
+import static pro.belbix.tgnotifier.utils.Constants.HREF_ETHERSCAN_TX;
 import static pro.belbix.tgnotifier.utils.Constants.MONEY_BUG_SMILE;
 import static pro.belbix.tgnotifier.utils.Constants.SAD_SMILE;
 import static pro.belbix.tgnotifier.utils.Constants.WIND_SMILE;
@@ -106,7 +107,7 @@ public class HarvestDTO implements DtoI {
     if (hashText == null) {
       return " ";
     }
-    return "<a href=\"https://etherscan.io/tx/" + hashText + "\">Etherscan</a>";
+    return HREF_ETHERSCAN_TX + hashText + "\">Etherscan</a>";
   }
 
   private String formatDescription(String descriptionText) {

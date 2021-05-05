@@ -1,5 +1,6 @@
 package pro.belbix.tgnotifier.models;
 
+import static pro.belbix.tgnotifier.utils.Constants.HREF_ETHERSCAN_TX;
 import static pro.belbix.tgnotifier.utils.Constants.SAD_SMILE;
 import static pro.belbix.tgnotifier.utils.NumberHelper.percentChangeType;
 
@@ -35,17 +36,28 @@ public class UniswapDTO implements DtoI {
   @Override
   public String print() {
     return EmojiParser.parseToUnicode(
-        type() + " " +
-            farmAmount() + " " +
-            separateCoins() + " " +
-            otherCoin() + "\n" +
-            price() + "\uD83D\uDCB2 per FARM " +
-            "<a href=\"https://etherscan.io/tx/" + hash + "\">Etherscan</a>" +
-            (description != null ? description + "\n" : "") +
-            "");
+        type(type) + " "
+            + farmAmount(amount)
+            + separateCoins(type) + " "
+            + otherCoin(otherAmount, otherCoin)
+            + price(lastPrice)
+            + getEtherscanTextLink(hash)
+            + getDescription(description)
+            + "");
   }
 
-  private String type() {
+  @Override
+  public String printValueChanged(double percent) {
+    return EmojiParser.parseToUnicode(
+        percentChangeType(percent) + " "
+            + getPriceChangeText(coin, percent)
+            + price(lastPrice)
+            + getEtherscanTextLink(hash)
+            + getDescription(description)
+            + "");
+  }
+
+  private String type(String type) {
     if (type == null) {
       return SAD_SMILE;
     }
@@ -63,11 +75,21 @@ public class UniswapDTO implements DtoI {
     }
   }
 
-  private String farmAmount() {
-    return String.format("%.2f", amount) + " FARM";
+  private String getPriceChangeText(String coin, double percent) {
+    if (coin == null) {
+      return "";
+    }
+    return coin + " price changed on "
+        + String.format("%.1f%%", percent)
+        + "\n";
+
   }
 
-  private String separateCoins() {
+  private String farmAmount(double amount) {
+    return String.format("%.2f", amount) + " FARM ";
+  }
+
+  private String separateCoins(String type) {
     if (type == null) {
       return SAD_SMILE;
     }
@@ -83,25 +105,25 @@ public class UniswapDTO implements DtoI {
     }
   }
 
-  private String otherCoin() {
-    return String.format("%.2f", otherAmount) + " " + otherCoin;
+  private String getDescription(String description) {
+    return (description != null ? description + "\n" : "");
   }
 
-  private String price() {
-    return String.format("%.2f", lastPrice);
+  private String getEtherscanTextLink(String hash) {
+    if (hash == null) {
+      return " ";
+    }
+    return HREF_ETHERSCAN_TX + hash + "\">Etherscan</a>";
   }
 
-  @Override
-  public String printValueChanged(double percent) {
-    return EmojiParser.parseToUnicode(
-        percentChangeType(percent) + " "
-            + coin + " price changed on " +
-            String.format("%.1f%%", percent) +
-            "\n" +
-            price() + "\uD83D\uDCB2 per FARM " +
-            "<a href=\"https://etherscan.io/tx/" + hash + "\">Etherscan</a>" +
-            (description != null ? description + "\n" : "") +
-            "");
+  private String otherCoin(double otherAmount, String otherCoin) {
+    if (otherCoin == null) {
+      return " ";
+    }
+    return String.format("%.2f", otherAmount) + " " + otherCoin + "\n";
   }
 
+  private String price(Double lastPrice) {
+    return String.format("%.2f", lastPrice) + "\uD83D\uDCB2 per FARM ";
+  }
 }

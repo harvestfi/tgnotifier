@@ -1,4 +1,4 @@
-package pro.belbix.tgnotifier.tg;
+package pro.belbix.tgnotifier.tg.model;
 
 import lombok.Data;
 
@@ -12,4 +12,5 @@ public class InlineButton {
     this.text = text;
     this.value = value;
   }
+
 }
